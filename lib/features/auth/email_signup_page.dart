@@ -15,6 +15,7 @@ class EmailSignUpPage extends ConsumerStatefulWidget {
 }
 
 class _EmailSignUpPageState extends ConsumerState<EmailSignUpPage> {
+  final _formKey = GlobalKey<FormState>();
   String _email = "";
   String _password = "";
   bool _obscurePassword = true;
@@ -73,16 +74,25 @@ class _EmailSignUpPageState extends ConsumerState<EmailSignUpPage> {
       body: Center(
         child: SizedBox(
           width: width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text("メールアドレスで登録", style: text.headlineSmall),
-              const SizedBox(height: 60),
-              ...form,
-              const SizedBox(height: 28),
-              FilledButton(onPressed: () {}, child: const Text("登録"))
-            ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("メールアドレスで登録", style: text.headlineSmall),
+                const SizedBox(height: 60),
+                ...form,
+                const SizedBox(height: 28),
+                FilledButton(
+                    onPressed: () {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        // 入力データが正常な場合
+                      }
+                    },
+                    child: const Text("登録"))
+              ],
+            ),
           ),
         ),
       ),
