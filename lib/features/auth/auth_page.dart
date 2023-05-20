@@ -24,7 +24,7 @@ class AuthPage extends ConsumerWidget {
       SizedBox(width: double.infinity, child: FilledButton(onPressed: () {}, child: const Text("Googleでログイン"))),
       const SizedBox(height: 16),
       SizedBox(width: double.infinity, child: FilledButton(onPressed: () {}, child: const Text("メールアドレスでログイン"))),
-      const SizedBox(height: 16),
+      const SizedBox(height: 20),
       CheckText(
           mainAxisAlignment: MainAxisAlignment.center,
           value: ref.watch(isKeepAuthProvider),
@@ -41,11 +41,11 @@ class AuthPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text("ユーザー登録", style: text.headlineSmall),
-              const SizedBox(height: 32),
+              const SizedBox(height: 60),
               ...signUpButtons,
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
               const TextDivider(child: Text("または")),
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
               ...logInButtons,
             ],
           ),
