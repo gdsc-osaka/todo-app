@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../components/check_text.dart';
-import 'auth_providers_text.dart';
+import 'auth_providers.dart';
 
 class EmailSignUpPage extends ConsumerStatefulWidget {
   const EmailSignUpPage({super.key});
