@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:todo_app/features/auth/check_text.dart';
-import 'package:todo_app/features/auth/email_signup_page.dart';
-import 'package:todo_app/features/auth/text_divider.dart';
+import 'package:todo_app/components/check_text.dart';
+import 'package:todo_app/components/text_divider.dart';
+import 'package:todo_app/features/auth/email_signup_pagevider.dart';
 
 import 'auth_providers.dart';
 

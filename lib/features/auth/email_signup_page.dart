@@ -2,8 +2,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'auth_providers.dart';
-import 'check_text.dart';
+import '../../components/check_text.dart';
+import 'auth_providers_text.dart';
 
 class EmailSignUpPage extends ConsumerStatefulWidget {
   const EmailSignUpPage({super.key});
