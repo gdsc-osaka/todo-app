@@ -1,7 +1,11 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class EmailForm extends StatefulWidget {
+import '../../components/check_text.dart';
+import 'auth_providers.dart';
+
+class EmailForm extends ConsumerStatefulWidget {
   const EmailForm(
       {super.key,
       required this.email,
@@ -17,10 +21,10 @@ class EmailForm extends StatefulWidget {
   final GlobalKey<FormState>? formKey;
 
   @override
-  State<EmailForm> createState() => _EmailFormState();
+  ConsumerState<EmailForm> createState() => _EmailFormState();
 }
 
-class _EmailFormState extends State<EmailForm> {
+class _EmailFormState extends ConsumerState<EmailForm> {
   bool _obscurePassword = true;
 
   @override
@@ -68,6 +72,12 @@ class _EmailFormState extends State<EmailForm> {
             initialValue: widget.password,
             onChanged: widget.onChangePassword,
           ),
+          const SizedBox(height: 16),
+          CheckText(
+              mainAxisAlignment: MainAxisAlignment.center,
+              value: ref.watch(isKeepAuthProvider),
+              onChanged: (value) => ref.read(isKeepAuthProvider.notifier).setState(value ?? true),
+              child: const Text("ログインしたままにする"))
         ],
       ),
     );

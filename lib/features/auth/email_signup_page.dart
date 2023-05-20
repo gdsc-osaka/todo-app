@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/features/auth/email_form.dart';
 
-import '../../components/check_text.dart';
-import 'auth_providers.dart';
-
 class EmailSignUpPage extends ConsumerStatefulWidget {
   const EmailSignUpPage({super.key});
 
@@ -25,25 +22,6 @@ class _EmailSignUpPageState extends ConsumerState<EmailSignUpPage> {
     final theme = Theme.of(context);
     final text = theme.textTheme;
 
-    final form = [
-      EmailForm(
-          key: _formKey,
-          email: _email,
-          password: _password,
-          onChangeEmail: (value) => setState(() {
-                _email = value;
-              }),
-          onChangePassword: (value) => setState(() {
-                _password = value;
-              })),
-      const SizedBox(height: 16),
-      CheckText(
-          mainAxisAlignment: MainAxisAlignment.center,
-          value: ref.watch(isKeepAuthProvider),
-          onChanged: (value) => ref.read(isKeepAuthProvider.notifier).setState(value ?? true),
-          child: const Text("ログインしたままにする"))
-    ];
-
     return Scaffold(
       body: Center(
         child: SizedBox(
@@ -56,7 +34,16 @@ class _EmailSignUpPageState extends ConsumerState<EmailSignUpPage> {
               children: [
                 Text("メールアドレスで登録", style: text.headlineSmall),
                 const SizedBox(height: 60),
-                ...form,
+                EmailForm(
+                    key: _formKey,
+                    email: _email,
+                    password: _password,
+                    onChangeEmail: (value) => setState(() {
+                          _email = value;
+                        }),
+                    onChangePassword: (value) => setState(() {
+                          _password = value;
+                        })),
                 const SizedBox(height: 28),
                 FilledButton(
                     onPressed: () {
