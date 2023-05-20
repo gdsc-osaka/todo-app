@@ -3,8 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:todo_app/features/auth/email_login_page.dart';
 import 'package:todo_app/features/auth/email_signup_page.dart';
+import 'package:todo_app/features/home/home_page.dart';
 
 import 'features/auth/auth_page.dart';
 import 'firebase_options.dart';
@@ -24,6 +26,7 @@ final _router = GoRouter(routes: [
   GoRoute(path: AuthPage.name, builder: (context, state) => const AuthPage()),
   GoRoute(path: EmailSignUpPage.name, builder: (context, state) => const EmailSignUpPage()),
   GoRoute(path: EmailLoginPage.name, builder: (context, state) => const EmailLoginPage()),
+  GoRoute(path: HomePage.name, builder: (context, state) => const HomePage()),
 ]);
 
 class MyApp extends StatelessWidget {
@@ -31,11 +34,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: _router,
-      title: 'To-Do',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return GlobalLoaderOverlay(
+      overlayWidget: const CircularProgressIndicator(),
+      child: MaterialApp.router(
+        routerConfig: _router,
+        title: 'To-Do',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
       ),
     );
   }
@@ -57,7 +63,7 @@ class RootPageState extends State<RootPage> {
       if (user == null) {
         context.go(AuthPage.name);
       } else {
-        // context.go(location)
+        context.go(HomePage.name);
       }
     });
   }

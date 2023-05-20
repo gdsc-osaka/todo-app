@@ -1,6 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:todo_app/features/auth/email_form.dart';
+
+import '../home/home_page.dart';
 
 class EmailSignUpPage extends ConsumerStatefulWidget {
   const EmailSignUpPage({super.key});
@@ -22,6 +28,35 @@ class _EmailSignUpPageState extends ConsumerState<EmailSignUpPage> {
     final theme = Theme.of(context);
     final text = theme.textTheme;
 
+    signUp() async {
+      if (_formKey.currentState?.validate() ?? false) {
+        // 入力データが正常な場合
+        context.loaderOverlay.show();
+        final messenger = ScaffoldMessenger.of(context);
+
+        try {
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _email,
+            password: _password,
+          );
+          context.loaderOverlay.hide();
+          if (mounted) context.go(HomePage.name);
+        } on FirebaseAuthException catch (e) {
+          context.loaderOverlay.hide();
+
+          if (e.code == 'weak-password') {
+            messenger.showSnackBar(const SnackBar(content: Text('より複雑なパスワードを使用してください')));
+          } else if (e.code == 'email-already-in-use') {
+            messenger.showSnackBar(const SnackBar(content: Text('メールアドレスが既に使用されています')));
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            print(e);
+          }
+        }
+      }
+    }
+
     return Scaffold(
       body: Center(
         child: SizedBox(
@@ -32,24 +67,20 @@ class _EmailSignUpPageState extends ConsumerState<EmailSignUpPage> {
             children: [
               Text("メールアドレスで登録", style: text.headlineSmall),
               const SizedBox(height: 60),
-              EmailForm(
-                  key: _formKey,
-                  email: _email,
-                  password: _password,
-                  onChangeEmail: (value) => setState(() {
-                        _email = value;
-                      }),
-                  onChangePassword: (value) => setState(() {
-                        _password = value;
-                      })),
+              Form(
+                key: _formKey,
+                child: EmailForm(
+                    email: _email,
+                    password: _password,
+                    onChangeEmail: (value) => setState(() {
+                          _email = value;
+                        }),
+                    onChangePassword: (value) => setState(() {
+                          _password = value;
+                        })),
+              ),
               const SizedBox(height: 28),
-              FilledButton(
-                  onPressed: () {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      // 入力データが正常な場合
-                    }
-                  },
-                  child: const Text("登録"))
+              FilledButton(onPressed: signUp, child: const Text("登録"))
             ],
           ),
         ),
