@@ -18,6 +18,13 @@ class EmailLoginPageState extends ConsumerState<EmailLoginPage> {
   String _password = "";
 
   @override
+  void dispose() {
+    super.dispose();
+
+    
+  }
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width * 0.6;
     final theme = Theme.of(context);

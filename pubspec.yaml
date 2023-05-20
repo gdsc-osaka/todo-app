@@ -40,6 +40,10 @@ dependencies:
   hooks_riverpod: ^2.3.6
   email_validator: ^2.1.17
   go_router: ^7.0.2
+  firebase_core: ^2.13.0
+  firebase_auth: ^4.6.1
+  cloud_firestore: ^4.7.1
+  firebase_storage: ^11.2.1
 
 dev_dependencies:
   flutter_test:
