@@ -26,3 +26,6 @@ https://zenn.dev/kazutxt/books/flutter_practice_introduction/viewer/30_chapter4_
 keytool
 `keytool -genkey -v -keystore .android/debug.keystore -alias androiddebugkey -keyalg RSA -validity 10000 -dname "CN=Android Debug,O=Android,C=US"`
 `keytool -list -v -keystore .android/debug.keystore`
+
+WEB対応は https://qiita.com/corocn/items/f420f32a1633f2c97b1d
+![client_id](cliend_id.png)
