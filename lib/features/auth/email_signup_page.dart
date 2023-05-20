@@ -8,6 +8,8 @@ import 'check_text.dart';
 class EmailSignUpPage extends ConsumerStatefulWidget {
   const EmailSignUpPage({super.key});
 
+  static const name = "/signup";
+
   @override
   ConsumerState<EmailSignUpPage> createState() => _EmailSignUpPageState();
 }

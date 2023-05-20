@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/features/auth/check_text.dart';
+import 'package:todo_app/features/auth/email_signup_page.dart';
 import 'package:todo_app/features/auth/text_divider.dart';
 
 import 'auth_providers.dart';
 
 class AuthPage extends ConsumerWidget {
   const AuthPage({super.key});
+
+  static const name = "/auth";
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,7 +21,9 @@ class AuthPage extends ConsumerWidget {
     final signUpButtons = [
       SizedBox(width: double.infinity, child: FilledButton(onPressed: () {}, child: Text("Googleで登録"))),
       const SizedBox(height: 16),
-      SizedBox(width: double.infinity, child: FilledButton(onPressed: () {}, child: const Text("メールアドレスで登録"))),
+      SizedBox(
+          width: double.infinity,
+          child: FilledButton(onPressed: () => context.push(EmailSignUpPage.name), child: const Text("メールアドレスで登録"))),
     ];
 
     final logInButtons = [
