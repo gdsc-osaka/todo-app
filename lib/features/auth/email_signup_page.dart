@@ -26,34 +26,31 @@ class _EmailSignUpPageState extends ConsumerState<EmailSignUpPage> {
       body: Center(
         child: SizedBox(
           width: width,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("メールアドレスで登録", style: text.headlineSmall),
-                const SizedBox(height: 60),
-                EmailForm(
-                    key: _formKey,
-                    email: _email,
-                    password: _password,
-                    onChangeEmail: (value) => setState(() {
-                          _email = value;
-                        }),
-                    onChangePassword: (value) => setState(() {
-                          _password = value;
-                        })),
-                const SizedBox(height: 28),
-                FilledButton(
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // 入力データが正常な場合
-                      }
-                    },
-                    child: const Text("登録"))
-              ],
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("メールアドレスで登録", style: text.headlineSmall),
+              const SizedBox(height: 60),
+              EmailForm(
+                  key: _formKey,
+                  email: _email,
+                  password: _password,
+                  onChangeEmail: (value) => setState(() {
+                        _email = value;
+                      }),
+                  onChangePassword: (value) => setState(() {
+                        _password = value;
+                      })),
+              const SizedBox(height: 28),
+              FilledButton(
+                  onPressed: () {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      // 入力データが正常な場合
+                    }
+                  },
+                  child: const Text("登録"))
+            ],
           ),
         ),
       ),

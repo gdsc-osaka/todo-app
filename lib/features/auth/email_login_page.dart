@@ -20,8 +20,6 @@ class EmailLoginPageState extends ConsumerState<EmailLoginPage> {
   @override
   void dispose() {
     super.dispose();
-
-    
   }
 
   @override
@@ -34,34 +32,31 @@ class EmailLoginPageState extends ConsumerState<EmailLoginPage> {
       body: Center(
         child: SizedBox(
           width: width,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("メールアドレスでログイン", style: text.headlineSmall),
-                const SizedBox(height: 60),
-                EmailForm(
-                    key: _formKey,
-                    email: _email,
-                    password: _password,
-                    onChangeEmail: (value) => setState(() {
-                          _email = value;
-                        }),
-                    onChangePassword: (value) => setState(() {
-                          _password = value;
-                        })),
-                const SizedBox(height: 28),
-                FilledButton(
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // 入力データが正常な場合
-                      }
-                    },
-                    child: const Text("ログイン"))
-              ],
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("メールアドレスでログイン", style: text.headlineSmall),
+              const SizedBox(height: 60),
+              EmailForm(
+                  key: _formKey,
+                  email: _email,
+                  password: _password,
+                  onChangeEmail: (value) => setState(() {
+                        _email = value;
+                      }),
+                  onChangePassword: (value) => setState(() {
+                        _password = value;
+                      })),
+              const SizedBox(height: 28),
+              FilledButton(
+                  onPressed: () {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      // 入力データが正常な場合
+                    }
+                  },
+                  child: const Text("ログイン"))
+            ],
           ),
         ),
       ),
