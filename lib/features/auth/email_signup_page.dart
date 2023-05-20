@@ -1,6 +1,6 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:todo_app/features/auth/email_form.dart';
 
 import '../../components/check_text.dart';
 import 'auth_providers.dart';
@@ -18,7 +18,6 @@ class _EmailSignUpPageState extends ConsumerState<EmailSignUpPage> {
   final _formKey = GlobalKey<FormState>();
   String _email = "";
   String _password = "";
-  bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -27,45 +26,16 @@ class _EmailSignUpPageState extends ConsumerState<EmailSignUpPage> {
     final text = theme.textTheme;
 
     final form = [
-      TextFormField(
-        decoration: const InputDecoration(
-          labelText: "メールアドレス",
-          prefixIcon: Icon(Icons.email),
-        ),
-        autovalidateMode: AutovalidateMode.disabled,
-        validator: (input) {
-          if (input == null || !EmailValidator.validate(input)) {
-            return "有効なメールアドレスを入力してください";
-          } else {
-            return null;
-          }
-        },
-        initialValue: _email,
-        onChanged: (input) => _email = input,
-      ),
-      const SizedBox(height: 16),
-      TextFormField(
-        decoration: InputDecoration(
-            labelText: "パスワード",
-            prefixIcon: const Icon(Icons.key),
-            suffixIcon: IconButton(
-              onPressed: () => setState(() {
-                _obscurePassword = !_obscurePassword;
+      EmailForm(
+          key: _formKey,
+          email: _email,
+          password: _password,
+          onChangeEmail: (value) => setState(() {
+                _email = value;
               }),
-              icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
-            )),
-        obscureText: _obscurePassword,
-        autovalidateMode: AutovalidateMode.disabled,
-        validator: (input) {
-          if (input == null || input.length < 8) {
-            return "8文字以上のパスワードを入力してください";
-          } else {
-            return null;
-          }
-        },
-        initialValue: _password,
-        onChanged: (input) => _password = input,
-      ),
+          onChangePassword: (value) => setState(() {
+                _password = value;
+              })),
       const SizedBox(height: 16),
       CheckText(
           mainAxisAlignment: MainAxisAlignment.center,
