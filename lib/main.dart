@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:todo_app/features/auth/email_login_page.dart';
 import 'package:todo_app/features/auth/email_signup_page.dart';
 
 import 'features/auth/auth_page.dart';
@@ -13,6 +14,7 @@ final _router = GoRouter(routes: [
   GoRoute(path: '/', builder: (context, state) => const RootPage()),
   GoRoute(path: AuthPage.name, builder: (context, state) => const AuthPage()),
   GoRoute(path: EmailSignUpPage.name, builder: (context, state) => const EmailSignUpPage()),
+  GoRoute(path: EmailLoginPage.name, builder: (context, state) => const EmailLoginPage()),
 ]);
 
 class MyApp extends StatelessWidget {

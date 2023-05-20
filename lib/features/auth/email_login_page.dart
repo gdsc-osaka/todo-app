@@ -6,6 +6,8 @@ import 'email_form.dart';
 class EmailLoginPage extends ConsumerStatefulWidget {
   const EmailLoginPage({Key? key}) : super(key: key);
 
+  static const name = '/login';
+
   @override
   EmailLoginPageState createState() => EmailLoginPageState();
 }

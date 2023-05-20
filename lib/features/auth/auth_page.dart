@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/components/check_text.dart';
 import 'package:todo_app/components/text_divider.dart';
+import 'package:todo_app/features/auth/email_login_page.dart';
 
 import 'auth_providers.dart';
 import 'email_signup_page.dart';
@@ -29,7 +30,9 @@ class AuthPage extends ConsumerWidget {
     final logInButtons = [
       SizedBox(width: double.infinity, child: FilledButton(onPressed: () {}, child: const Text("Googleでログイン"))),
       const SizedBox(height: 16),
-      SizedBox(width: double.infinity, child: FilledButton(onPressed: () {}, child: const Text("メールアドレスでログイン"))),
+      SizedBox(
+          width: double.infinity,
+          child: FilledButton(onPressed: () => context.push(EmailLoginPage.name), child: const Text("メールアドレスでログイン"))),
       const SizedBox(height: 20),
       CheckText(
           mainAxisAlignment: MainAxisAlignment.center,
