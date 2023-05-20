@@ -10,8 +10,8 @@ class AuthPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final width = MediaQuery.of(context).size.width * 0.6;
+    final theme = Theme.of(context);
     final text = theme.textTheme;
 
     final signUpButtons = [
