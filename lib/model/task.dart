@@ -1,3 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:todo_app/model/json_converters.dart';
+
+part 'task.g.dart';
+
+@JsonSerializable()
 class Task {
   Task(
       {required this.createdAt,
@@ -8,16 +15,30 @@ class Task {
       required this.images,
       required this.status});
 
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  @TimestampConverter()
+  final Timestamp createdAt;
+  @TimestampConverter()
+  final Timestamp updatedAt;
   final String title;
   final String description;
-  final DateTime until;
+  @TimestampConverter()
+  final Timestamp until;
   final List<String> images;
+  @TaskStatusConverter()
   final TaskStatus status;
 }
 
 enum TaskStatus {
-  undone,
-  completed;
+  undone('undone'),
+  completed('completed');
+
+  const TaskStatus(this.id);
+
+  final String id;
+
+  static Map<String, TaskStatus> enums = Map.fromIterables(TaskStatus.values.map((e) => e.id), TaskStatus.values);
+
+  static TaskStatus fromString(String? value) {
+    return enums[value] ?? TaskStatus.undone;
+  }
 }
