@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   riverpod: ^2.3.6
   hooks_riverpod: ^2.3.6
+  email_validator: ^2.1.17
 
 dev_dependencies:
   flutter_test:
