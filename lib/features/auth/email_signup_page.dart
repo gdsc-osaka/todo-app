@@ -28,7 +28,10 @@ class _EmailSignUpPageState extends ConsumerState<EmailSignUpPage> {
 
     final form = [
       TextFormField(
-        decoration: const InputDecoration(labelText: "メールアドレス"),
+        decoration: const InputDecoration(
+          labelText: "メールアドレス",
+          prefixIcon: Icon(Icons.email),
+        ),
         autovalidateMode: AutovalidateMode.disabled,
         validator: (input) {
           if (input == null || !EmailValidator.validate(input)) {
@@ -44,6 +47,7 @@ class _EmailSignUpPageState extends ConsumerState<EmailSignUpPage> {
       TextFormField(
         decoration: InputDecoration(
             labelText: "パスワード",
+            prefixIcon: const Icon(Icons.key),
             suffixIcon: IconButton(
               onPressed: () => setState(() {
                 _obscurePassword = !_obscurePassword;
