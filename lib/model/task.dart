@@ -26,6 +26,10 @@ class Task {
   final List<String> images;
   @TaskStatusConverter()
   final TaskStatus status;
+
+  factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TaskToJson(this);
 }
 
 enum TaskStatus {
