@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/components/photo_icon.dart';
 import 'package:todo_app/features/auth/auth_providers.dart';
+import 'package:todo_app/features/home/task_list.dart';
+import 'package:todo_app/features/home/tasks_provider.dart';
+import 'package:todo_app/model/task.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -19,6 +22,18 @@ class HomePage extends ConsumerWidget {
         title: const Text("To-Do"),
         actions: [IconButton(onPressed: () {}, icon: userIcon)],
       ),
+      body: ref.watch(tasksProvider).when(
+          data: (tasks) => Column(
+                children: [
+                  DoneTaskList(tasks: tasks.where((task) => task.status == TaskStatus.completed).toList()),
+                  const SizedBox(height: 10),
+                  const Divider(),
+                  const SizedBox(height: 10),
+                  TaskList(tasks: tasks.where((task) => task.status == TaskStatus.undone).toList())
+                ],
+              ),
+          error: (err, stack) => Text(err.toString()),
+          loading: () => const Center(child: CircularProgressIndicator())),
     );
   }
 }
