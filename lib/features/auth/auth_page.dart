@@ -79,7 +79,7 @@ class AuthPage extends ConsumerWidget {
       CheckText(
           mainAxisAlignment: MainAxisAlignment.center,
           value: ref.watch(isKeepAuthProvider),
-          onChanged: (value) => ref.read(isKeepAuthProvider.notifier).setState(value ?? true),
+          onChanged: (value) => ref.read(isKeepAuthProvider.notifier).state = value ?? true,
           child: const Text("ログインしたままにする"))
     ];
 
