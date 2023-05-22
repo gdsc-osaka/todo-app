@@ -6,15 +6,15 @@ import 'json_converters.dart';
 part 'user.g.dart';
 
 @JsonSerializable()
-class User {
-  User({required this.createdAt, required this.updatedAt});
+class DBUser {
+  DBUser({required this.createdAt, required this.updatedAt});
 
   @TimestampConverter()
   final Timestamp createdAt;
   @TimestampConverter()
   final Timestamp updatedAt;
 
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  factory DBUser.fromJson(Map<String, dynamic> json) => _$DBUserFromJson(json);
 
-  Map<String, dynamic> toJson() => _$UserToJson(this);
+  Map<String, dynamic> toJson() => _$DBUserToJson(this);
 }
