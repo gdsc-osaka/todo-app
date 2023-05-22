@@ -34,6 +34,11 @@ class HomePage extends ConsumerWidget {
               ),
           error: (err, stack) => Text(err.toString()),
           loading: () => const Center(child: CircularProgressIndicator())),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        tooltip: "タスクを追加",
+        child: const Icon(Icons.edit),
+      ),
     );
   }
 }
