@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:todo_app/features/home/date_formatter.dart';
 import 'package:todo_app/util/callback.dart';
+
+import '../image_view/image_view_page.dart';
 
 class TaskEditPage extends StatefulWidget {
   const TaskEditPage({super.key});
@@ -33,6 +36,16 @@ class _TaskEditPageState extends State<TaskEditPage> {
           imageFiles = pickedFiles;
         });
       }
+    }
+
+    tapImage(int index) async {
+      context.pushNamed(ImageViewPage.name, queryParameters: {
+        ImageViewPage.pathParam: imageFiles[index].path
+      });
+    }
+
+    addTask() async {
+
     }
 
     return Scaffold(
@@ -72,7 +85,7 @@ class _TaskEditPageState extends State<TaskEditPage> {
               : ImageList(
                   imageFiles: imageFiles,
                   onPressedAdd: pickImage,
-                  onPressedImage: () {}
+                  onPressedImage: tapImage
           ),
           Row(
             mainAxisAlignment: isImagesEmpty ? MainAxisAlignment.spaceBetween : MainAxisAlignment.end,
@@ -80,7 +93,7 @@ class _TaskEditPageState extends State<TaskEditPage> {
               isImagesEmpty
                   ? OutlinedButton(onPressed: pickImage, child: const Text("画像を追加"))
                   : const SizedBox(),
-              FilledButton(onPressed: () {}, child: const Text("追加")),
+              FilledButton(onPressed: addTask, child: const Text("追加")),
             ],
           )
         ],
@@ -131,9 +144,10 @@ class ImageList extends StatelessWidget {
             );
           } else {
             final i = index - 1;
+            final path = imageFiles[i].path;
             return ImageListItem(
                 onPressed: () => onPressedImage(i),
-                child: Image.file(File(imageFiles[i].path))
+                child: Hero(tag: path, child: Image.file(File(path)))
             );
           }
         },

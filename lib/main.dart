@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:todo_app/features/auth/email_login_page.dart';
 import 'package:todo_app/features/auth/email_signup_page.dart';
 import 'package:todo_app/features/home/home_page.dart';
+import 'package:todo_app/features/image_view/image_view_page.dart';
 
 import 'features/auth/auth_page.dart';
 import 'firebase_options.dart';
@@ -27,6 +30,7 @@ final _router = GoRouter(routes: [
   GoRoute(path: EmailSignUpPage.name, builder: (context, state) => const EmailSignUpPage()),
   GoRoute(path: EmailLoginPage.name, builder: (context, state) => const EmailLoginPage()),
   GoRoute(path: HomePage.name, builder: (context, state) => const HomePage()),
+  GoRoute(path: ImageViewPage.name, builder: (context, state) => ImageViewPage(imagePath: state.queryParameters[ImageViewPage.pathParam]!)),
 ]);
 
 class MyApp extends StatelessWidget {
