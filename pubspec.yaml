@@ -49,6 +49,7 @@ dependencies:
   json_annotation: ^4.8.0
   intl: ^0.18.1
   image_picker: ^0.8.7+5
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:
