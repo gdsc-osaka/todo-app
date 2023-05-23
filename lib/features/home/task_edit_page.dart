@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/features/home/date_formatter.dart';
 
 class TaskEditPage extends StatefulWidget {
   const TaskEditPage({super.key});
@@ -32,9 +33,40 @@ class _TaskEditPageState extends State<TaskEditPage> {
                 return null;
               }
             },
-          )
+          ),
+          TaskDetailRow(
+              icon: const Icon(Icons.access_time),
+              child: Tooltip(child: Text(dateFormatter.format(until)), onTriggered: () {})
+          ),
+          TaskDetailRow(
+              icon: const Icon(Icons.table_rows),
+              child: TextFormField(
+                decoration: const InputDecoration(hintText: "詳細を入力"),
+                onChanged: (value) => setState(() {
+                  title = value;
+                }),
+              )
+          ),
         ],
       ),
     );
+  }
+}
+
+class TaskDetailRow extends StatelessWidget {
+  const TaskDetailRow({super.key, required this.icon, required this.child});
+
+  final Widget icon;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        icon,
+        child
+      ],
+    )
   }
 }

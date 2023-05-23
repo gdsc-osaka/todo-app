@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:todo_app/features/home/date_formatter.dart';
 
 import '../../model/task.dart';
 
@@ -48,8 +48,6 @@ class TaskListItem extends StatefulWidget {
 class _TaskListItemState extends State<TaskListItem> {
   bool isDone = false;
 
-  static final DateFormat _formatter = DateFormat('yyyy/MM/dd');
-
   @override
   Widget build(BuildContext context) {
     final task = widget.task;
@@ -64,7 +62,7 @@ class _TaskListItemState extends State<TaskListItem> {
           Checkbox(value: isDone, onChanged: (value) {}),
           Expanded(
             child: Column(
-              children: [Text(widget.task.title), Chip(label: Text(_formatter.format(until)))],
+              children: [Text(widget.task.title), Chip(label: Text(dateFormatter.format(until)))],
             ),
           ),
           photo
