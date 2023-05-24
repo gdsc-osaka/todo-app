@@ -45,11 +45,22 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
       context.pushNamed(ImageViewPage.name, queryParameters: {ImageViewPage.pathParam: imageFiles[index].path});
     }
 
+    tapUntil() async {
+      const beforeYear = 100;
+      const maxYear = 100;
+      final picked = await showDatePicker(context: context, initialDate: until, firstDate: DateTime(until.year - beforeYear), lastDate: DateTime(until.year + maxYear));
+
+      if (picked != null) {
+        setState(() {
+          until = picked;
+        });
+      }
+    }
+
     addTask() async {
       final user = ref.watch(userProvider);
       if (user != null) {
-        await FirestoreAPI.instance.addTask(user,
-            title: title, description: description, until: until, images: imageFiles.map((e) => File(e.path)).toList());
+        await FirestoreAPI.instance.addTask(user, title: title, description: description, until: until, images: imageFiles.map((e) => File(e.path)).toList());
 
         if (mounted) {
           context.pop();
@@ -76,9 +87,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
               }
             },
           ),
-          TaskDetailRow(
-              icon: const Icon(Icons.access_time),
-              child: Tooltip(child: Text(dateFormatter.format(until)), onTriggered: () {})),
+          TaskDetailRow(icon: const Icon(Icons.access_time), child: Tooltip(onTriggered: tapUntil, child: Text(dateFormatter.format(until)))),
           TaskDetailRow(
               icon: const Icon(Icons.table_rows),
               child: TextFormField(
@@ -87,9 +96,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
                   title = value;
                 }),
               )),
-          isImagesEmpty
-              ? const SizedBox()
-              : ImageList(imageFiles: imageFiles, onPressedAdd: pickImage, onPressedImage: tapImage),
+          isImagesEmpty ? const SizedBox() : ImageList(imageFiles: imageFiles, onPressedAdd: pickImage, onPressedImage: tapImage),
           Row(
             mainAxisAlignment: isImagesEmpty ? MainAxisAlignment.spaceBetween : MainAxisAlignment.end,
             children: [
@@ -142,8 +149,7 @@ class ImageList extends StatelessWidget {
           } else {
             final i = index - 1;
             final path = imageFiles[i].path;
-            return ImageListItem(
-                onPressed: () => onPressedImage(i), child: Hero(tag: path, child: Image.file(File(path))));
+            return ImageListItem(onPressed: () => onPressedImage(i), child: Hero(tag: path, child: Image.file(File(path))));
           }
         },
         separatorBuilder: (context, index) => const SizedBox(width: 10),
