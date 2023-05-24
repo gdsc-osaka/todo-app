@@ -8,6 +8,7 @@ import 'package:todo_app/features/auth/email_login_page.dart';
 import 'package:todo_app/features/auth/email_signup_page.dart';
 import 'package:todo_app/features/home/home_page.dart';
 import 'package:todo_app/features/image_view/image_view_page.dart';
+import 'package:todo_app/features/task_edit/task_edit_page.dart';
 
 import 'features/auth/auth_page.dart';
 import 'firebase_options.dart';
@@ -28,6 +29,7 @@ final _router = GoRouter(routes: [
   GoRoute(path: EmailSignUpPage.name, builder: (context, state) => const EmailSignUpPage()),
   GoRoute(path: EmailLoginPage.name, builder: (context, state) => const EmailLoginPage()),
   GoRoute(path: HomePage.name, builder: (context, state) => const HomePage()),
+  GoRoute(path: TaskEditPage.name, builder: (context, state) => const TaskEditPage()),
   GoRoute(path: ImageViewPage.name, builder: (context, state) => ImageViewPage(imagePath: state.queryParameters[ImageViewPage.pathParam]!)),
 ]);
 

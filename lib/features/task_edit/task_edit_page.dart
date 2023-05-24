@@ -14,6 +14,8 @@ import '../image_view/image_view_page.dart';
 class TaskEditPage extends ConsumerStatefulWidget {
   const TaskEditPage({super.key});
 
+  static const name = "/edit-task";
+
   @override
   ConsumerState<TaskEditPage> createState() => _TaskEditPageState();
 }
