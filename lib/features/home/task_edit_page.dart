@@ -2,20 +2,23 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:todo_app/features/home/date_formatter.dart';
+import 'package:todo_app/features/home/firestore_api.dart';
 import 'package:todo_app/util/callback.dart';
 
+import '../auth/auth_providers.dart';
 import '../image_view/image_view_page.dart';
 
-class TaskEditPage extends StatefulWidget {
+class TaskEditPage extends ConsumerStatefulWidget {
   const TaskEditPage({super.key});
 
   @override
-  State<TaskEditPage> createState() => _TaskEditPageState();
+  ConsumerState<TaskEditPage> createState() => _TaskEditPageState();
 }
 
-class _TaskEditPageState extends State<TaskEditPage> {
+class _TaskEditPageState extends ConsumerState<TaskEditPage> {
   String title = "";
   String description = "";
   DateTime until = DateTime.now();
@@ -39,13 +42,19 @@ class _TaskEditPageState extends State<TaskEditPage> {
     }
 
     tapImage(int index) async {
-      context.pushNamed(ImageViewPage.name, queryParameters: {
-        ImageViewPage.pathParam: imageFiles[index].path
-      });
+      context.pushNamed(ImageViewPage.name, queryParameters: {ImageViewPage.pathParam: imageFiles[index].path});
     }
 
     addTask() async {
+      final user = ref.watch(userProvider);
+      if (user != null) {
+        await FirestoreAPI.instance.addTask(user,
+            title: title, description: description, until: until, images: imageFiles.map((e) => File(e.path)).toList());
 
+        if (mounted) {
+          context.pop();
+        }
+      }
     }
 
     return Scaffold(
@@ -69,8 +78,7 @@ class _TaskEditPageState extends State<TaskEditPage> {
           ),
           TaskDetailRow(
               icon: const Icon(Icons.access_time),
-              child: Tooltip(child: Text(dateFormatter.format(until)), onTriggered: () {})
-          ),
+              child: Tooltip(child: Text(dateFormatter.format(until)), onTriggered: () {})),
           TaskDetailRow(
               icon: const Icon(Icons.table_rows),
               child: TextFormField(
@@ -78,21 +86,14 @@ class _TaskEditPageState extends State<TaskEditPage> {
                 onChanged: (value) => setState(() {
                   title = value;
                 }),
-              )
-          ),
+              )),
           isImagesEmpty
               ? const SizedBox()
-              : ImageList(
-                  imageFiles: imageFiles,
-                  onPressedAdd: pickImage,
-                  onPressedImage: tapImage
-          ),
+              : ImageList(imageFiles: imageFiles, onPressedAdd: pickImage, onPressedImage: tapImage),
           Row(
             mainAxisAlignment: isImagesEmpty ? MainAxisAlignment.spaceBetween : MainAxisAlignment.end,
             children: [
-              isImagesEmpty
-                  ? OutlinedButton(onPressed: pickImage, child: const Text("画像を追加"))
-                  : const SizedBox(),
+              isImagesEmpty ? OutlinedButton(onPressed: pickImage, child: const Text("画像を追加")) : const SizedBox(),
               FilledButton(onPressed: addTask, child: const Text("追加")),
             ],
           )
@@ -112,10 +113,7 @@ class TaskDetailRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        icon,
-        child
-      ],
+      children: [icon, child],
     );
   }
 }
@@ -140,20 +138,16 @@ class ImageList extends StatelessWidget {
                     icon: const Icon(Icons.add),
                     onPressed: onPressedAdd,
                   ),
-                )
-            );
+                ));
           } else {
             final i = index - 1;
             final path = imageFiles[i].path;
             return ImageListItem(
-                onPressed: () => onPressedImage(i),
-                child: Hero(tag: path, child: Image.file(File(path)))
-            );
+                onPressed: () => onPressedImage(i), child: Hero(tag: path, child: Image.file(File(path))));
           }
         },
         separatorBuilder: (context, index) => const SizedBox(width: 10),
-        itemCount: imageFiles.length + 1
-    );
+        itemCount: imageFiles.length + 1);
   }
 }
 
@@ -171,11 +165,7 @@ class ImageListItem extends StatelessWidget {
       borderRadius: const BorderRadius.all(Radius.circular(12)),
       child: InkWell(
         onTap: onPressed,
-        child: SizedBox(
-          width: width ?? 100,
-          height: height ?? 100,
-          child: child
-        ),
+        child: SizedBox(width: width ?? 100, height: height ?? 100, child: child),
       ),
     );
   }

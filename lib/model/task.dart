@@ -6,14 +6,7 @@ part 'task.g.dart';
 
 @JsonSerializable()
 class Task {
-  Task(
-      {required this.createdAt,
-      required this.updatedAt,
-      required this.title,
-      required this.description,
-      required this.until,
-      required this.images,
-      required this.status});
+  Task({required this.createdAt, required this.updatedAt, required this.title, required this.description, required this.until, required this.images, required this.status});
 
   @TimestampConverter()
   final Timestamp createdAt;
@@ -30,6 +23,16 @@ class Task {
   factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
 
   Map<String, dynamic> toJson() => _$TaskToJson(this);
+
+  static Map<String, dynamic> map({required String title, required String description, required DateTime until, required List<String> images, required TaskStatus status}) => {
+        "createdAt": FieldValue.serverTimestamp(),
+        "updatedAt": FieldValue.serverTimestamp(),
+        "title": title,
+        "description": description,
+        "until": Timestamp.fromDate(until),
+        "images": images,
+        "status": status,
+      };
 }
 
 enum TaskStatus {

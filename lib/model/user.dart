@@ -17,4 +17,9 @@ class DBUser {
   factory DBUser.fromJson(Map<String, dynamic> json) => _$DBUserFromJson(json);
 
   Map<String, dynamic> toJson() => _$DBUserToJson(this);
+
+  static Map<String, dynamic> map() => {
+        "createdAt": FieldValue.serverTimestamp(),
+        "updatedAt": FieldValue.serverTimestamp(),
+      };
 }
