@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:todo_app/features/home/date_formatter.dart';
+import 'package:todo_app/features/task_view/task_view_page.dart';
 
 import '../../model/task.dart';
 
@@ -29,9 +31,7 @@ class DoneTaskList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ExpansionTile(
       title: const Text("完了済みタスク"),
-      children: tasks
-          .map((task) => Padding(padding: const EdgeInsets.only(left: 12), child: DoneTaskListItem(task: task)))
-          .toList(),
+      children: tasks.map((task) => Padding(padding: const EdgeInsets.only(left: 12), child: DoneTaskListItem(task: task))).toList(),
     );
   }
 }
@@ -55,18 +55,25 @@ class _TaskListItemState extends State<TaskListItem> {
     final photo = images.isEmpty ? const SizedBox() : Image.network(images[0]);
     final until = task.until.toDate();
 
-    return Card(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Checkbox(value: isDone, onChanged: (value) {}),
-          Expanded(
-            child: Column(
-              children: [Text(widget.task.title), Chip(label: Text(dateFormatter.format(until)))],
+    onTap() {
+      context.goNamed(TaskViewPage.name, queryParameters: {TaskViewPage.idParam: task.id});
+    }
+
+    return InkWell(
+      onTap: onTap,
+      child: Card(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Checkbox(value: isDone, onChanged: (value) {}),
+            Expanded(
+              child: Column(
+                children: [Text(widget.task.title), Chip(label: Text(dateFormatter.format(until)))],
+              ),
             ),
-          ),
-          photo
-        ],
+            photo
+          ],
+        ),
       ),
     );
   }
