@@ -9,7 +9,7 @@ import '../../model/task.dart';
 
 final _db = FirebaseFirestore.instance;
 
-final tasksProvider = FutureProvider<List<Task>>((ref) async {
+final taskMapProvider = FutureProvider<Map<String, Task>>((ref) async {
   final user = ref.watch(userProvider);
 
   if (user == null) {
@@ -17,8 +17,20 @@ final tasksProvider = FutureProvider<List<Task>>((ref) async {
   } else {
     final uid = user.uid;
     final snapshot = await _db.collection('users').doc(uid).collection('tasks').withTaskConverter().get();
-    final tasks = snapshot.docs.map((e) => e.data());
 
-    return tasks.toList();
+    return {for (final e in snapshot.docs) e.id: e.data()};
   }
+});
+
+final tasksProvider = FutureProvider((ref) async {
+  final taskMap = await ref.watch(taskMapProvider.future);
+
+  return taskMap.values;
+});
+
+final taskProvider = FutureProvider.family<Task?, String>((ref, id) async {
+  final taskMap = await ref.watch(taskMapProvider.future);
+  final task = taskMap[id];
+
+  return task;
 });

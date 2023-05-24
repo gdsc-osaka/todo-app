@@ -10,6 +10,7 @@ import 'package:todo_app/util/callback.dart';
 
 import '../auth/auth_providers.dart';
 import '../image_view/image_view_page.dart';
+import 'task_detail_row.dart';
 
 class TaskEditPage extends ConsumerStatefulWidget {
   const TaskEditPage({super.key});
@@ -50,7 +51,8 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
     tapUntil() async {
       const beforeYear = 100;
       const maxYear = 100;
-      final picked = await showDatePicker(context: context, initialDate: until, firstDate: DateTime(until.year - beforeYear), lastDate: DateTime(until.year + maxYear));
+      final picked = await showDatePicker(
+          context: context, initialDate: until, firstDate: DateTime(until.year - beforeYear), lastDate: DateTime(until.year + maxYear));
 
       if (picked != null) {
         setState(() {
@@ -62,7 +64,8 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
     addTask() async {
       final user = ref.watch(userProvider);
       if (user != null) {
-        await FirestoreAPI.instance.addTask(user, title: title, description: description, until: until, images: imageFiles.map((e) => File(e.path)).toList());
+        await FirestoreAPI.instance
+            .addTask(user, title: title, description: description, until: until, images: imageFiles.map((e) => File(e.path)).toList());
 
         if (mounted) {
           context.pop();
@@ -89,7 +92,8 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
               }
             },
           ),
-          TaskDetailRow(icon: const Icon(Icons.access_time), child: Tooltip(onTriggered: tapUntil, child: Text(dateFormatter.format(until)))),
+          TaskDetailRow(
+              icon: const Icon(Icons.access_time), child: Tooltip(onTriggered: tapUntil, child: Text(dateFormatter.format(until)))),
           TaskDetailRow(
               icon: const Icon(Icons.table_rows),
               child: TextFormField(
@@ -108,21 +112,6 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
           )
         ],
       ),
-    );
-  }
-}
-
-class TaskDetailRow extends StatelessWidget {
-  const TaskDetailRow({super.key, required this.icon, required this.child});
-
-  final Widget icon;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [icon, child],
     );
   }
 }
