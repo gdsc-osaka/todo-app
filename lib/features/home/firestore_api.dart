@@ -28,8 +28,8 @@ class FirestoreAPI {
     final imageUUIDList = images.map((e) => _uuid.v4()).toList();
     final imagePathList = imageUUIDList.map((id) => "${uid}/$taskId/$id").toList();
 
-    final taskData =
-        Task.map(update: false, title: title, description: description, until: until, images: imagePathList, status: TaskStatus.undone);
+    final taskData = Task.map(
+        update: false, id: taskId, title: title, description: description, until: until, images: imagePathList, status: TaskStatus.undone);
 
     // Firestoreに追加
 
