@@ -26,15 +26,6 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
     final theme = Theme.of(context);
     final text = theme.textTheme;
 
-    onChangeTitle(String? value) {}
-
-    onTapUntil(DateTime until) async {
-      const beforeYear = 100;
-      const maxYear = 100;
-      final picked = await showDatePicker(
-          context: context, initialDate: until, firstDate: DateTime(until.year - beforeYear), lastDate: DateTime(until.year + maxYear));
-    }
-
     return Scaffold(
       body: ref.watch(taskProvider(widget.taskId)).when(
           data: (task) {
@@ -52,6 +43,22 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
             } else {
               final until = task.until.toDate();
 
+              onChangeTitle(String? value) {}
+
+              onTapUntil() async {
+                const beforeYear = 100;
+                const maxYear = 100;
+                final picked = await showDatePicker(
+                    context: context,
+                    initialDate: until,
+                    firstDate: DateTime(until.year - beforeYear),
+                    lastDate: DateTime(until.year + maxYear));
+              }
+
+              onTapDelete() async {}
+
+              onTapComplete() async {}
+
               return CustomScrollView(
                 slivers: [
                   SliverAppBar.large(
@@ -64,7 +71,7 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
                     children: [
                       TaskDetailRow(
                           icon: const Icon(Icons.access_time),
-                          child: Tooltip(onTriggered: () => onTapUntil(until), child: Text(dateFormatter.format(until)))),
+                          child: Tooltip(onTriggered: onTapUntil, child: Text(dateFormatter.format(until)))),
                       TaskDetailRow(
                           icon: const Icon(Icons.table_rows),
                           child: TextFormField(
@@ -77,7 +84,22 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
                     crossAxisCount: 2,
                     mainAxisSpacing: 2,
                     crossAxisSpacing: 2,
-                    children: [],
+                    children: task.images
+                        .map((imagePath) => ref.watch(storageUrlProvider(imagePath)).when(
+                            data: (url) => Image.network(url),
+                            error: (err, stack) => Text(err.toString()),
+                            loading: () => const CircularProgressIndicator()))
+                        .toList(),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        OutlinedButton(onPressed: onTapDelete, child: const Text('タスクを削除')),
+                        FilledButton(onPressed: onTapComplete, child: const Text('完了とする')),
+                      ],
+                    ),
                   )
                 ],
               );
