@@ -7,7 +7,8 @@ part 'task.g.dart';
 @JsonSerializable()
 class Task {
   Task(
-      {required this.createdAt,
+      {required this.id,
+      required this.createdAt,
       required this.updatedAt,
       required this.title,
       required this.description,
@@ -15,6 +16,7 @@ class Task {
       required this.images,
       required this.status});
 
+  final String id;
   @TimestampConverter()
   final Timestamp createdAt;
   @TimestampConverter()
@@ -32,7 +34,7 @@ class Task {
   Map<String, dynamic> toJson() => _$TaskToJson(this);
 
   static Map<String, dynamic> map(
-      {required bool update, String? title, String? description, DateTime? until, List<String>? images, TaskStatus? status}) {
+      {required bool update, String? id, String? title, String? description, DateTime? until, List<String>? images, TaskStatus? status}) {
     final map = <String, dynamic>{
       "updatedAt": FieldValue.serverTimestamp(),
     };
@@ -41,6 +43,7 @@ class Task {
       map['createdAt'] = FieldValue.serverTimestamp();
     }
 
+    if (id != null) map['id'] = title;
     if (title != null) map['title'] = title;
     if (description != null) map['description'] = description;
     if (until != null) map['until'] = Timestamp.fromDate(until);
