@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' show FirebaseStorage;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/features/auth/auth_providers.dart';
 import 'package:todo_app/model/with_converter_ex.dart';
@@ -8,6 +9,7 @@ import 'package:todo_app/model/with_converter_ex.dart';
 import '../../model/task.dart';
 
 final _db = FirebaseFirestore.instance;
+final _storage = FirebaseStorage.instance;
 
 final taskMapProvider = FutureProvider<Map<String, Task>>((ref) async {
   final user = ref.watch(userProvider);
@@ -33,4 +35,9 @@ final taskProvider = FutureProvider.family<Task?, String>((ref, id) async {
   final task = taskMap[id];
 
   return task;
+});
+
+/// firebase storage の path に対応する URL を返す
+final storageUrlProvider = FutureProvider.family<String, String>((ref, path) async {
+  return await _storage.ref(path).getDownloadURL();
 });
