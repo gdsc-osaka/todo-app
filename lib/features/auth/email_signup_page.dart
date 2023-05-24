@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:todo_app/features/auth/email_form.dart';
+import 'package:todo_app/features/home/firestore_api.dart';
 
 import '../home/home_page.dart';
 
@@ -35,12 +36,21 @@ class _EmailSignUpPageState extends ConsumerState<EmailSignUpPage> {
         final messenger = ScaffoldMessenger.of(context);
 
         try {
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: _email,
             password: _password,
           );
-          context.loaderOverlay.hide();
-          if (mounted) context.go(HomePage.name);
+
+          final user = credential.user;
+
+          if (user != null) {
+            FirestoreAPI.instance.addUser(user);
+          }
+
+          if (mounted) {
+            context.loaderOverlay.hide();
+            context.go(HomePage.name);
+          }
         } on FirebaseAuthException catch (e) {
           context.loaderOverlay.hide();
 
