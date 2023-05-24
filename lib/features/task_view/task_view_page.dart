@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:todo_app/features/auth/auth_providers.dart';
+import 'package:todo_app/features/home/firestore_api.dart';
 import 'package:todo_app/features/home/tasks_provider.dart';
 import 'package:todo_app/features/task_edit/task_detail_row.dart';
 
+import '../../model/task.dart';
 import '../home/date_formatter.dart';
 
 class TaskViewPage extends ConsumerStatefulWidget {
@@ -16,6 +19,10 @@ class TaskViewPage extends ConsumerStatefulWidget {
 }
 
 class TaskViewPageState extends ConsumerState<TaskViewPage> {
+  final _db = FirestoreAPI.instance;
+
+  final titleEditingController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -25,9 +32,10 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final text = theme.textTheme;
+    final taskId = widget.taskId;
 
     return Scaffold(
-      body: ref.watch(taskProvider(widget.taskId)).when(
+      body: ref.watch(taskProvider(taskId)).when(
           data: (task) {
             if (task == null) {
               return Center(
@@ -42,8 +50,23 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
               );
             } else {
               final until = task.until.toDate();
+              final user = ref.watch(userProvider);
 
-              onChangeTitle(String? value) {}
+              onChangeTitle(String? value) {
+                if (user != null) {
+                  if (value != null && value.isNotEmpty) {
+                    _db.updateTask(user, taskId, Task.map(update: true, title: value));
+                  } else {
+                    titleEditingController.text = task.title;
+                  }
+                }
+              }
+
+              onChangeDescription(String? value) {
+                if (user != null && value != null) {
+                  _db.updateTask(user, taskId, Task.map(update: true, description: value));
+                }
+              }
 
               onTapUntil() async {
                 const beforeYear = 100;
@@ -53,11 +76,27 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
                     initialDate: until,
                     firstDate: DateTime(until.year - beforeYear),
                     lastDate: DateTime(until.year + maxYear));
+
+                if (user != null) {
+                  _db.updateTask(user, taskId, Task.map(update: true, until: picked));
+                }
               }
 
-              onTapDelete() async {}
+              onTapDelete() async {
+                if (user != null) {
+                  await _db.deleteTask(user, taskId);
 
-              onTapComplete() async {}
+                  if (mounted) {
+                    context.pop();
+                  }
+                }
+              }
+
+              onTapComplete() {
+                if (user != null) {
+                  _db.updateTask(user, taskId, Task.map(update: true, status: TaskStatus.completed));
+                }
+              }
 
               return CustomScrollView(
                 slivers: [
@@ -65,7 +104,7 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
                     floating: true,
                     pinned: true,
                     shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    title: Text(task.title),
+                    title: TextFormField(controller: titleEditingController, initialValue: task.title, onSaved: onChangeTitle),
                   ),
                   SliverList.list(
                     children: [
@@ -77,7 +116,7 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
                           child: TextFormField(
                               decoration: const InputDecoration(hintText: "詳細を入力"),
                               initialValue: task.description,
-                              onSaved: onChangeTitle)),
+                              onSaved: onChangeDescription)),
                     ],
                   ),
                   SliverGrid.count(

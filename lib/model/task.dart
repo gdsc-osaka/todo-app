@@ -6,7 +6,14 @@ part 'task.g.dart';
 
 @JsonSerializable()
 class Task {
-  Task({required this.createdAt, required this.updatedAt, required this.title, required this.description, required this.until, required this.images, required this.status});
+  Task(
+      {required this.createdAt,
+      required this.updatedAt,
+      required this.title,
+      required this.description,
+      required this.until,
+      required this.images,
+      required this.status});
 
   @TimestampConverter()
   final Timestamp createdAt;
@@ -24,15 +31,24 @@ class Task {
 
   Map<String, dynamic> toJson() => _$TaskToJson(this);
 
-  static Map<String, dynamic> map({required String title, required String description, required DateTime until, required List<String> images, required TaskStatus status}) => {
-        "createdAt": FieldValue.serverTimestamp(),
-        "updatedAt": FieldValue.serverTimestamp(),
-        "title": title,
-        "description": description,
-        "until": Timestamp.fromDate(until),
-        "images": images,
-        "status": status,
-      };
+  static Map<String, dynamic> map(
+      {required bool update, String? title, String? description, DateTime? until, List<String>? images, TaskStatus? status}) {
+    final map = <String, dynamic>{
+      "updatedAt": FieldValue.serverTimestamp(),
+    };
+
+    if (!update) {
+      map['createdAt'] = FieldValue.serverTimestamp();
+    }
+
+    if (title != null) map['title'] = title;
+    if (description != null) map['description'] = description;
+    if (until != null) map['until'] = Timestamp.fromDate(until);
+    if (images != null) map['images'] = images;
+    if (status != null) map['status'] = status.id;
+
+    return map;
+  }
 }
 
 enum TaskStatus {
