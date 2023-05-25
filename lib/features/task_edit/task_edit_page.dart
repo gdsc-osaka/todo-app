@@ -62,7 +62,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
     }
 
     addTask() async {
-      final user = ref.watch(userProvider);
+      final user = await ref.watch(userProvider.future);
       if (user != null) {
         await FirestoreAPI.instance
             .addTask(user, title: title, description: description, until: until, images: imageFiles.map((e) => File(e.path)).toList());

@@ -54,7 +54,7 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
               );
             } else {
               final until = task.until.toDate();
-              final user = ref.watch(userProvider);
+              final user = ref.watch(userProvider).value;
 
               onChangeTitle(String? value) {
                 if (user != null) {

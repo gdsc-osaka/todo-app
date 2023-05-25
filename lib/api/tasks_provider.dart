@@ -10,7 +10,7 @@ import '../../model/task.dart';
 final _db = FirebaseFirestore.instance;
 
 final taskMapProvider = FutureProvider<Map<String, Task>>((ref) async {
-  final user = ref.watch(userProvider);
+  final user = await ref.watch(userProvider.future);
 
   if (user == null) {
     return Future.error('User not found.');
