@@ -44,8 +44,11 @@ class EmailLoginPageState extends ConsumerState<EmailLoginPage> {
             email: _email,
             password: _password,
           );
-          context.loaderOverlay.hide();
-          if (mounted) context.go(HomePage.name);
+
+          if (mounted) {
+            context.loaderOverlay.hide();
+            context.go(HomePage.name);
+          }
         } on FirebaseAuthException catch (e) {
           context.loaderOverlay.hide();
 
