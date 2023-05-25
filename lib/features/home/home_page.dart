@@ -16,8 +16,10 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final photoUrl = ref.watch(userProvider)?.photoURL;
+    final photoUrl = ref.watch(userProvider).value?.photoURL;
     final userIcon = photoUrl != null ? PhotoIcon(photoUrl: photoUrl) : const Icon(Icons.person);
+    final theme = Theme.of(context);
+    final text = theme.textTheme;
 
     tapAddTask() {
       context.push(TaskEditPage.name);
@@ -30,15 +32,34 @@ class HomePage extends ConsumerWidget {
         actions: [IconButton(onPressed: () {}, icon: userIcon)],
       ),
       body: ref.watch(tasksProvider).when(
-          data: (tasks) => Column(
-                children: [
-                  DoneTaskList(tasks: tasks.where((task) => task.status == TaskStatus.completed).toList()),
+          data: (tasks) {
+            final doneTasks = tasks.where((task) => task.status == TaskStatus.completed).toList();
+            final undoneTasks = tasks.where((task) => task.status == TaskStatus.undone).toList();
+
+            final children = <Widget>[];
+
+            if (doneTasks.isNotEmpty) {
+              children.addAll([
+                DoneTaskList(tasks: doneTasks),
+              ]);
+            }
+
+            if (undoneTasks.isNotEmpty) {
+              if (doneTasks.isNotEmpty) {
+                children.addAll([
                   const SizedBox(height: 10),
                   const Divider(),
-                  const SizedBox(height: 10),
-                  TaskList(tasks: tasks.where((task) => task.status == TaskStatus.undone).toList())
-                ],
-              ),
+                  const SizedBox(height: 10)
+                ]);
+              }
+
+              children.add(TaskList(tasks: undoneTasks));
+            } else {
+              children.add(Text('タスクはありません', style: text.titleLarge));
+            }
+
+            return Column();
+          },
           error: (err, stack) => Text(err.toString()),
           loading: () => const Center(child: CircularProgressIndicator())),
       floatingActionButton: FloatingActionButton(
