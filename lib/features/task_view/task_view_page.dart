@@ -5,6 +5,7 @@ import 'package:todo_app/features/home/firestore_api.dart';
 import 'package:todo_app/features/task_edit/task_detail_row.dart';
 
 import '../../api/auth_providers.dart';
+import '../../api/storage_provider.dart';
 import '../../model/task.dart';
 import '../../api/tasks_provider.dart';
 import '../home/date_formatter.dart';
