@@ -25,7 +25,7 @@ class _EmailSignUpPageState extends ConsumerState<EmailSignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width * 0.6;
+    final width = MediaQuery.of(context).size.width * 0.8;
     final theme = Theme.of(context);
     final text = theme.textTheme;
 
