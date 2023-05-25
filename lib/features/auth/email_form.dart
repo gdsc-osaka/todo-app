@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../components/check_text.dart';
-import 'auth_providers.dart';
+import '../../api/auth_providers.dart';
 
 class EmailForm extends ConsumerStatefulWidget {
   const EmailForm(

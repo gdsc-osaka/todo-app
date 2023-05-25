@@ -9,7 +9,7 @@ import 'package:todo_app/components/text_divider.dart';
 import 'package:todo_app/features/auth/email_login_page.dart';
 import 'package:todo_app/features/home/home_page.dart';
 
-import 'auth_providers.dart';
+import '../../api/auth_providers.dart';
 import 'email_signup_page.dart';
 
 class AuthPage extends ConsumerWidget {

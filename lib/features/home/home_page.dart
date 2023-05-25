@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/components/photo_icon.dart';
-import 'package:todo_app/features/auth/auth_providers.dart';
 import 'package:todo_app/features/home/task_list.dart';
-import 'package:todo_app/features/home/tasks_provider.dart';
 import 'package:todo_app/features/task_edit/task_edit_page.dart';
 import 'package:todo_app/model/task.dart';
+
+import '../../api/auth_providers.dart';
+import '../../api/tasks_provider.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});

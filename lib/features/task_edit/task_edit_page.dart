@@ -8,7 +8,7 @@ import 'package:todo_app/features/home/date_formatter.dart';
 import 'package:todo_app/features/home/firestore_api.dart';
 import 'package:todo_app/util/callback.dart';
 
-import '../auth/auth_providers.dart';
+import '../../api/auth_providers.dart';
 import '../image_view/image_view_page.dart';
 import 'task_detail_row.dart';
 
