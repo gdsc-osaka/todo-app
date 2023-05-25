@@ -34,6 +34,7 @@ class _EmailFormState extends ConsumerState<EmailForm> {
             labelText: "メールアドレス",
             prefixIcon: Icon(Icons.email),
           ),
+          autofillHints: const [AutofillHints.email],
           keyboardType: TextInputType.emailAddress,
           autovalidateMode: AutovalidateMode.disabled,
           validator: (input) {
@@ -59,6 +60,7 @@ class _EmailFormState extends ConsumerState<EmailForm> {
               )),
           obscureText: _obscurePassword,
           keyboardType: TextInputType.visiblePassword,
+          autofillHints: const [AutofillHints.password],
           autovalidateMode: AutovalidateMode.disabled,
           validator: (input) {
             if (input == null || input.length < 8) {
