@@ -33,6 +33,13 @@ class HomePage extends ConsumerWidget {
       ),
       body: ref.watch(tasksProvider).when(
           data: (tasks) {
+            // どのタスクもなし
+            if (tasks.isEmpty) {
+              return Center(
+                child: Text('タスクはありません', style: text.titleLarge),
+              );
+            }
+
             final doneTasks = tasks.where((task) => task.status == TaskStatus.completed).toList();
             final undoneTasks = tasks.where((task) => task.status == TaskStatus.undone).toList();
 
@@ -54,11 +61,9 @@ class HomePage extends ConsumerWidget {
               }
 
               children.add(TaskList(tasks: undoneTasks));
-            } else {
-              children.add(Text('タスクはありません', style: text.titleLarge));
             }
 
-            return Column();
+            return Column(children: children);
           },
           error: (err, stack) => Text(err.toString()),
           loading: () => const Center(child: CircularProgressIndicator())),
