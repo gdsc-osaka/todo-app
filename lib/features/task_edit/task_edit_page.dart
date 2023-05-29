@@ -134,7 +134,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
             isImagesEmpty
                 ? const SizedBox()
                 : SizedBox(
-                    height: 100,
+                    height: 120,
                     child: ImageList(
                         imageFiles: imageFiles,
                         onPressedAdd: pickImage,
@@ -229,7 +229,7 @@ class ImageListItem extends StatelessWidget {
       child: InkWell(
         onTap: onPressed,
         child:
-            SizedBox(width: width ?? 100, height: height ?? 100, child: child),
+            SizedBox(width: width ?? 120, height: height ?? 120, child: child),
       ),
     );
   }
