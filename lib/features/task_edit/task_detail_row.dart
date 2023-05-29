@@ -8,9 +8,12 @@ class TaskDetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [icon, child],
+    return Padding(
+      padding: const EdgeInsets.only(top: 3, bottom: 3),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [Padding(padding: const EdgeInsets.only(top: 12, right: 12), child: icon), child],
+      ),
     );
   }
 }

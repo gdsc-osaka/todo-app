@@ -12,3 +12,10 @@ const filledTextFieldDecoration = InputDecoration(
           width: 2,
           style: BorderStyle.solid,
         )));
+
+const simpleInputDecoration = InputDecoration(
+  border: OutlineInputBorder(
+    borderSide: BorderSide.none
+  ),
+  contentPadding: EdgeInsets.only(top: 15, bottom: 10)
+);
