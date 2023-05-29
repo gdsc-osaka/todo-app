@@ -56,7 +56,7 @@ class _TaskListItemState extends State<TaskListItem> {
     final until = task.until.toDate();
 
     onTap() {
-      context.goNamed(TaskViewPage.name, queryParameters: {TaskViewPage.idParam: task.id});
+      context.goNamed(TaskViewPage.name, pathParameters: {TaskViewPage.idParam: task.id});
     }
 
     return InkWell(

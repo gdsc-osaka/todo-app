@@ -6,6 +6,7 @@ class ImageViewPage extends StatelessWidget {
   const ImageViewPage({super.key, required this.imagePath});
 
   static const name = '/image-view';
+  static const path = '/image-view/:path';
   static const pathParam = 'path';
 
   final String imagePath;

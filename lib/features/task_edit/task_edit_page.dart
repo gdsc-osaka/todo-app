@@ -54,7 +54,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
 
     tapImage(int index) async {
       context.pushNamed(ImageViewPage.name,
-          queryParameters: {ImageViewPage.pathParam: imageFiles[index].path});
+          pathParameters: {ImageViewPage.pathParam: imageFiles[index].path});
     }
 
     tapUntil() async {

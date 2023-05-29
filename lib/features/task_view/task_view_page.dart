@@ -14,6 +14,7 @@ class TaskViewPage extends ConsumerStatefulWidget {
   const TaskViewPage({Key? key, required this.taskId}) : super(key: key);
 
   static const name = '/task-view';
+  static const path = '/task-view/:id';
   static const idParam = 'id';
 
   final String taskId;

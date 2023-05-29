@@ -31,8 +31,8 @@ final _router = GoRouter(routes: [
   GoRoute(path: EmailLoginPage.name, builder: (context, state) => const EmailLoginPage()),
   GoRoute(path: HomePage.name, builder: (context, state) => const HomePage()),
   GoRoute(path: TaskEditPage.name, builder: (context, state) => const TaskEditPage()),
-  GoRoute(path: ImageViewPage.name, builder: (context, state) => ImageViewPage(imagePath: state.queryParameters[ImageViewPage.pathParam]!)),
-  GoRoute(path: TaskViewPage.name, builder: (context, state) => TaskViewPage(taskId: state.queryParameters[TaskViewPage.idParam]!))
+  GoRoute(name: ImageViewPage.name, path: ImageViewPage.path, builder: (context, state) => ImageViewPage(imagePath: state.pathParameters[ImageViewPage.pathParam]!)),
+  GoRoute(name: TaskViewPage.name, path: TaskViewPage.path, builder: (context, state) => TaskViewPage(taskId: state.pathParameters[TaskViewPage.idParam]!))
 ]);
 
 class MyApp extends StatelessWidget {
