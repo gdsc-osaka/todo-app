@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' show FirebaseStorage;
 import 'package:todo_app/model/user.dart';
 import 'package:todo_app/model/with_converter_ex.dart';
 import 'package:uuid/uuid.dart';
@@ -11,6 +12,7 @@ import '../../model/task.dart';
 const _uuid = Uuid();
 final _db = FirebaseFirestore.instance;
 final _users = _db.collection('users');
+final _storage = FirebaseStorage.instance.ref();
 
 DocumentReference _taskRef(String uid, String taskId) {
   return _users.doc(uid).collection('tasks').doc(taskId);
@@ -31,9 +33,7 @@ class FirestoreAPI {
     final taskData = Task.map(
         update: false, id: taskId, title: title, description: description, until: until, images: imagePathList, status: TaskStatus.undone);
 
-    // Firestoreに追加
-
-    // ユーザーを追加
+    // ユーザーのドキュメントが未登録の場合, ユーザーを追加
     if (!existsDBUser) {
       final snapshot = await _users.doc(uid).get();
       existsDBUser = snapshot.exists;
@@ -42,7 +42,22 @@ class FirestoreAPI {
       }
     }
 
-    await _taskRef(uid, taskId).set(taskData);
+    // Storageに追加
+    final futures = <Future>[];
+
+    for (int i = 0; i < imagePathList.length; i++) {
+      final path = imagePathList[i];
+      final file = images[i];
+
+      futures.add(
+        _storage.child(path).putFile(file)
+      );
+    }
+
+    // Firestoreに追加
+    futures.add(_taskRef(uid, taskId).set(taskData));
+
+    await Future.wait(futures);
   }
 
   Future<void> addUser(User user) async {
