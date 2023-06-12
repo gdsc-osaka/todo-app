@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:todo_app/components/date_pick_button.dart';
 import 'package:todo_app/features/home/firestore_api.dart';
 import 'package:todo_app/features/task_edit/task_detail_row.dart';
+import 'package:todo_app/theme/input_decorations.dart';
 
 import '../../api/auth_providers.dart';
 import '../../api/storage_provider.dart';
@@ -38,6 +40,8 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
     final theme = Theme.of(context);
     final text = theme.textTheme;
     final taskId = widget.taskId;
+    final width = MediaQuery.of(context).size.width;
+    final padding = width * 0.05;
 
     return Scaffold(
       body: ref.watch(taskProvider(taskId)).when(
@@ -56,13 +60,16 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
             } else {
               final until = task.until.toDate();
               final user = ref.watch(userProvider).value;
+              final images = task.images;
+
+              if (titleEditingController.text.isEmpty) {
+                titleEditingController.text = task.title;
+              }
 
               onChangeTitle(String? value) {
                 if (user != null) {
-                  if (value != null && value.isNotEmpty) {
+                  if (value != task.title) {
                     _db.updateTask(user, taskId, Task.map(update: true, title: value));
-                  } else {
-                    titleEditingController.text = task.title;
                   }
                 }
               }
@@ -109,20 +116,25 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
                     floating: true,
                     pinned: true,
                     shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    title: TextFormField(controller: titleEditingController, initialValue: task.title, onSaved: onChangeTitle),
+                    title: TextFormField(controller: titleEditingController, onFieldSubmitted: onChangeTitle, decoration: simpleInputDecoration),
                   ),
-                  SliverList.list(
-                    children: [
-                      TaskDetailRow(
-                          icon: const Icon(Icons.access_time),
-                          child: Tooltip(onTriggered: onTapUntil, child: Text(dateFormatter.format(until)))),
-                      TaskDetailRow(
-                          icon: const Icon(Icons.table_rows),
-                          child: TextFormField(
-                              decoration: const InputDecoration(hintText: "詳細を入力"),
-                              initialValue: task.description,
-                              onSaved: onChangeDescription)),
-                    ],
+                  SliverPadding(
+                    padding: EdgeInsets.only(left: padding, right: padding),
+                    sliver: SliverList.list(
+                      children: [
+                        TaskDetailRow(
+                            icon: const Icon(Icons.access_time),
+                            child: DatePickButton(onPressed: onTapUntil, date: dateFormatter.format(until))),
+                        TaskDetailRow(
+                            icon: const Icon(Icons.table_rows),
+                            child: Expanded(
+                              child: TextFormField(
+                                  decoration: const InputDecoration(hintText: "詳細を入力"),
+                                  initialValue: task.description,
+                                  onFieldSubmitted: onChangeDescription),
+                            )),
+                      ],
+                    ),
                   ),
                   SliverGrid.count(
                     crossAxisCount: 2,
@@ -135,16 +147,16 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
                             loading: () => const CircularProgressIndicator()))
                         .toList(),
                   ),
-                  SliverToBoxAdapter(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        OutlinedButton(onPressed: onTapDelete, child: const Text('タスクを削除')),
-                        FilledButton(onPressed: onTapComplete, child: const Text('完了とする')),
-                      ],
-                    ),
-                  )
+                  // SliverToBoxAdapter(
+                  //   child: Row(
+                  //     crossAxisAlignment: CrossAxisAlignment.center,
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       OutlinedButton(onPressed: onTapDelete, child: const Text('タスクを削除')),
+                  //       FilledButton(onPressed: onTapComplete, child: const Text('完了とする')),
+                  //     ],
+                  //   ),
+                  // )
                 ],
               );
             }
