@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:todo_app/components/date_pick_button.dart';
 import 'package:todo_app/features/home/date_formatter.dart';
 import 'package:todo_app/features/home/firestore_api.dart';
 import 'package:todo_app/theme/input_decorations.dart';
@@ -37,7 +38,6 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
     final padding = width * 0.05;
     final theme = Theme.of(context);
     final text = theme.textTheme;
-    final color = theme.colorScheme;
 
     pickImage() async {
       final pickedFiles = await ImagePicker().pickMultiImage(
@@ -114,17 +114,14 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
             ),
             TaskDetailRow(
                 icon: const Icon(Icons.access_time),
-                child: OutlinedButton(
-                    onPressed: tapUntil,
-                    child: Text(strUntil,
-                        style: TextStyle(color: color.onSurfaceVariant)))),
+                child: DatePickButton(onPressed: tapUntil, date: strUntil)),
             TaskDetailRow(
                 icon: const Icon(Icons.table_rows),
                 child: Expanded(
                   child: TextFormField(
                     decoration: simpleInputDecoration.merge(hintText: "詳細を入力"),
                     onChanged: (value) => setState(() {
-                      title = value;
+                      description = value;
                     }),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
