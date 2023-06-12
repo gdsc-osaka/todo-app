@@ -43,7 +43,7 @@ class Task {
       map['createdAt'] = FieldValue.serverTimestamp();
     }
 
-    if (id != null) map['id'] = title;
+    if (id != null) map['id'] = id;
     if (title != null) map['title'] = title;
     if (description != null) map['description'] = description;
     if (until != null) map['until'] = Timestamp.fromDate(until);
