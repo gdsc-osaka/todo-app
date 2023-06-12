@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:todo_app/api/storage_provider.dart';
 import 'package:todo_app/features/home/date_formatter.dart';
 import 'package:todo_app/features/task_view/task_view_page.dart';
 
@@ -36,43 +38,55 @@ class DoneTaskList extends StatelessWidget {
   }
 }
 
-class TaskListItem extends StatefulWidget {
+class TaskListItem extends ConsumerStatefulWidget {
   const TaskListItem({super.key, required this.task});
 
   final Task task;
 
   @override
-  State<TaskListItem> createState() => _TaskListItemState();
+  ConsumerState<TaskListItem> createState() => _TaskListItemState();
 }
 
-class _TaskListItemState extends State<TaskListItem> {
+class _TaskListItemState extends ConsumerState<TaskListItem> {
   bool isDone = false;
 
   @override
   Widget build(BuildContext context) {
     final task = widget.task;
     final images = task.images;
-    final photo = images.isEmpty ? const SizedBox() : Image.network(images[0]);
     final until = task.until.toDate();
+
+    const height = 100.0;
 
     onTap() {
       context.pushNamed(TaskViewPage.name, pathParameters: {TaskViewPage.idParam: task.id});
     }
 
-    return InkWell(
-      onTap: onTap,
-      child: Card(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Checkbox(value: isDone, onChanged: (value) {}),
-            Expanded(
-              child: Column(
-                children: [Text(widget.task.title), Chip(label: Text(dateFormatter.format(until)))],
+    return SizedBox(
+      height: height,
+      child: InkWell(
+        onTap: onTap,
+        child: Card(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Checkbox(value: isDone, onChanged: (value) {}),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Text(widget.task.title), Chip(label: Text(dateFormatter.format(until)))],
+                ),
               ),
-            ),
-            photo
-          ],
+              images.isEmpty ? const SizedBox()
+                  : ref.watch(storageUrlProvider(images[0])).when(
+                  data: (url) => Image.network(url, height: height, width: height, fit: BoxFit.cover),
+                  error: (err, stack) => const Icon(Icons.error),
+                  loading: () => const CircularProgressIndicator())
+            ],
+          ),
         ),
       ),
     );
@@ -86,12 +100,10 @@ class TaskList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100,
-      child: ListView.builder(
-        itemBuilder: (context, index) => TaskListItem(task: tasks[index]),
-        itemCount: tasks.length,
-      ),
+    return ListView.builder(
+      itemBuilder: (context, index) => TaskListItem(task: tasks[index]),
+      itemCount: tasks.length,
+      shrinkWrap: true,
     );
   }
 }
