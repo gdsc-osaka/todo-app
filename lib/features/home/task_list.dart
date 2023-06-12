@@ -56,7 +56,7 @@ class _TaskListItemState extends State<TaskListItem> {
     final until = task.until.toDate();
 
     onTap() {
-      context.goNamed(TaskViewPage.name, pathParameters: {TaskViewPage.idParam: task.id});
+      context.pushNamed(TaskViewPage.name, pathParameters: {TaskViewPage.idParam: task.id});
     }
 
     return InkWell(
@@ -86,9 +86,12 @@ class TaskList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) => TaskListItem(task: tasks[index]),
-      itemCount: tasks.length,
+    return SizedBox(
+      height: 100,
+      child: ListView.builder(
+        itemBuilder: (context, index) => TaskListItem(task: tasks[index]),
+        itemCount: tasks.length,
+      ),
     );
   }
 }
