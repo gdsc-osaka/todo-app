@@ -89,7 +89,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
     }
 
     return Scaffold(
-        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("タスクを追加"),
       ),
