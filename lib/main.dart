@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +19,11 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -61,17 +65,25 @@ class RootPage extends StatefulWidget {
 }
 
 class RootPageState extends State<RootPage> {
+  late StreamSubscription _stream;
+
   @override
   void initState() {
     super.initState();
 
-    FirebaseAuth.instance.userChanges().listen((user) {
+    _stream = FirebaseAuth.instance.userChanges().listen((user) {
       if (user == null) {
         context.go(AuthPage.name);
       } else {
         context.go(HomePage.name);
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _stream.cancel();
   }
 
   @override
