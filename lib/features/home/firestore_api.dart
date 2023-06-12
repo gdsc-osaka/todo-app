@@ -23,7 +23,7 @@ class FirestoreAPI {
   Future<void> addTask(User user,
       {required String title, required String description, required DateTime until, required List<File> images}) async {
     final uid = user.uid;
-    final taskId = _uuid.v5("uid", uid);
+    final taskId = _uuid.v4();
 
     final imageUUIDList = images.map((e) => _uuid.v4()).toList();
     final imagePathList = imageUUIDList.map((id) => "${uid}/$taskId/$id").toList();
