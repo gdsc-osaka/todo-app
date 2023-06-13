@@ -10,7 +10,7 @@ import '../../model/task.dart';
 final _db = FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
 
-final tasksStreamProvider = StreamProvider.autoDispose<List<Task>>((ref) {
+final allTaskProvider = StreamProvider.autoDispose<List<Task>>((ref) {
   return ref.watch(userProvider).when(
       data: (user) {
         if (user == null) {
@@ -46,7 +46,7 @@ final tasksStreamProvider = StreamProvider.autoDispose<List<Task>>((ref) {
 });
 
 /// 特定のタスクのStreamを渡す
-final taskStreamProvider = StreamProvider.autoDispose.family<Task, String>((ref, taskId) {
+final taskProvider = StreamProvider.autoDispose.family<Task, String>((ref, taskId) {
   final user = _auth.currentUser;
   
   if (user == null) {
