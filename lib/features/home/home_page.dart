@@ -33,7 +33,7 @@ class HomePage extends ConsumerWidget {
         title: const Text("To-Do"),
         actions: [IconButton(onPressed: () {}, icon: userIcon)],
       ),
-      body: ref.watch(allTasksProvider).when(
+      body: ref.watch(tasksStreamProvider).when(
           data: (tasks) {
             // どのタスクもなし
             if (tasks.isEmpty) {
