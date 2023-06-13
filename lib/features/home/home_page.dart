@@ -20,6 +20,8 @@ class HomePage extends ConsumerWidget {
     final userIcon = photoUrl != null ? PhotoIcon(photoUrl: photoUrl) : const Icon(Icons.person);
     final theme = Theme.of(context);
     final text = theme.textTheme;
+    final width = MediaQuery.of(context).size.width;
+    final padding = width * 0.05;
 
     tapAddTask() {
       context.push(TaskEditPage.name);
@@ -31,7 +33,7 @@ class HomePage extends ConsumerWidget {
         title: const Text("To-Do"),
         actions: [IconButton(onPressed: () {}, icon: userIcon)],
       ),
-      body: ref.watch(tasksProvider).when(
+      body: ref.watch(allTasksProvider).when(
           data: (tasks) {
             // どのタスクもなし
             if (tasks.isEmpty) {

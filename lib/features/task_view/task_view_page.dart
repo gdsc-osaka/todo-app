@@ -44,7 +44,7 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
     final padding = width * 0.05;
 
     return Scaffold(
-      body: ref.watch(taskProvider(taskId)).when(
+      body: ref.watch(taskStreamProvider(taskId)).when(
           data: (task) {
             if (task == null) {
               return Center(
