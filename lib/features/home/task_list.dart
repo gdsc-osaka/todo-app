@@ -24,12 +24,16 @@ class DoneTaskListItem extends StatelessWidget {
       }
     }
 
+    onTap() {
+      context.pushNamed(TaskViewPage.name, pathParameters: {TaskViewPage.idParam: task.id});
+    }
+
     return Row(
       children: [
         const SizedBox(width: 16),
         const Icon(Icons.check),
         const SizedBox(width: 8),
-        Text(task.title, style: const TextStyle(decoration: TextDecoration.lineThrough)),
+        GestureDetector(onTap: onTap, child: Text(task.title, style: const TextStyle(decoration: TextDecoration.lineThrough))),
         const Expanded(child: SizedBox()),
         SizedBox(
           height: 36,

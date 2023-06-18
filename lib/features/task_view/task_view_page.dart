@@ -109,12 +109,18 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
               onTapComplete() {
                 if (user != null) {
                   _db.updateTask(user, taskId, Task.map(update: true, status: TaskStatus.completed));
+
+                  if (mounted) {
+                    context.pop();
+                  }
                 }
               }
 
               onTapImage(int index) async {
                 final url = await ref.watch(storageUrlProvider(images[index]).future);
-                context.pushNamed(ImageViewPage.name, queryParameters: {ImageViewPage.urlParam: url});
+                if (mounted) {
+                  context.pushNamed(ImageViewPage.name, queryParameters: {ImageViewPage.urlParam: url});
+                }
               }
 
               return CustomScrollView(
@@ -151,45 +157,41 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
                   SliverPadding(
                     padding: EdgeInsets.only(left: padding, right: padding),
                     sliver: SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 120,
-                        child: ImageList(
-                            imageProviders: images
-                                .map((e) => NetworkImage(ref
-                                    .watch(storageUrlProvider(e))
-                                    .when(data: (url) => url, error: (err, stack) => "", loading: () => "")))
-                                .toList(),
-                            tags: images,
-                            onPressedAdd: () {},
-                            onPressedImage: onTapImage,
-                            canAdd: false),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: images.isNotEmpty
+                            ? SizedBox(
+                                height: 120,
+                                child: ImageList(
+                                    imageProviders: images
+                                        .map((e) => NetworkImage(ref
+                                            .watch(storageUrlProvider(e))
+                                            .when(data: (url) => url, error: (err, stack) => "", loading: () => "")))
+                                        .toList(),
+                                    tags: images,
+                                    onPressedAdd: () {},
+                                    onPressedImage: onTapImage,
+                                    canAdd: false),
+                              )
+                            : const SizedBox(),
                       ),
                     ),
-                    // sliver: SliverGrid.count(
-                    //   crossAxisCount: 2,
-                    //   mainAxisSpacing: 2,
-                    //   crossAxisSpacing: 2,
-                    //   children: task.images
-                    //       .map((imagePath) => ref.watch(storageUrlProvider(imagePath)).when(
-                    //           data: (url) => ClipRRect(
-                    //                 borderRadius: BorderRadius.circular(32),
-                    //                 child: Image.network(url, fit: BoxFit.cover),
-                    //               ),
-                    //           error: (err, stack) => Text(err.toString()),
-                    //           loading: () => const CircularProgressIndicator()))
-                    //       .toList(),
-                    // ),
                   ),
-                  // SliverToBoxAdapter(
-                  //   child: Row(
-                  //     crossAxisAlignment: CrossAxisAlignment.center,
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       OutlinedButton(onPressed: onTapDelete, child: const Text('タスクを削除')),
-                  //       FilledButton(onPressed: onTapComplete, child: const Text('完了とする')),
-                  //     ],
-                  //   ),
-                  // )
+                  SliverPadding(
+                    padding: EdgeInsets.only(left: padding, right: padding),
+                    sliver: SliverToBoxAdapter(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          OutlinedButton(onPressed: onTapDelete, child: const Text('タスクを削除')),
+                          task.status != TaskStatus.completed
+                              ? FilledButton(onPressed: onTapComplete, child: const Text('完了とする'))
+                              : const SizedBox(),
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               );
             }
