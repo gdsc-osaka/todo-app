@@ -8,8 +8,8 @@ import 'package:todo_app/theme/input_decorations.dart';
 
 import '../../api/auth_providers.dart';
 import '../../api/storage_provider.dart';
-import '../../model/task.dart';
 import '../../api/tasks_provider.dart';
+import '../../model/task.dart';
 import '../home/date_formatter.dart';
 
 class TaskViewPage extends ConsumerStatefulWidget {
@@ -116,7 +116,11 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
                     floating: true,
                     pinned: true,
                     shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    title: TextFormField(controller: titleEditingController, onFieldSubmitted: onChangeTitle, decoration: simpleInputDecoration),
+                    title: TextFormField(
+                        controller: titleEditingController,
+                        onFieldSubmitted: onChangeTitle,
+                        decoration: simpleInputDecoration,
+                        style: text.headlineSmall),
                   ),
                   SliverPadding(
                     padding: EdgeInsets.only(left: padding, right: padding),
