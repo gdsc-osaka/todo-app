@@ -39,7 +39,10 @@ final _router = GoRouter(routes: [
   GoRoute(
       name: ImageViewPage.name,
       path: ImageViewPage.path,
-      builder: (context, state) => ImageViewPage(imagePath: state.pathParameters[ImageViewPage.pathParam]!)),
+      builder: (context, state) => ImageViewPage(
+            imagePath: state.queryParameters[ImageViewPage.pathParam],
+            imageUrl: state.queryParameters[ImageViewPage.urlParam],
+          )),
   GoRoute(
       name: TaskViewPage.name,
       path: TaskViewPage.path,

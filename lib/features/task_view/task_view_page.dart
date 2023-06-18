@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:todo_app/api/storage_provider.dart';
 import 'package:todo_app/components/date_pick_button.dart';
 import 'package:todo_app/features/home/firestore_api.dart';
 import 'package:todo_app/features/task_edit/task_detail_row.dart';
 import 'package:todo_app/theme/input_decorations.dart';
 
 import '../../api/auth_providers.dart';
-import '../../api/storage_provider.dart';
 import '../../api/tasks_provider.dart';
+import '../../components/image_list.dart';
 import '../../model/task.dart';
 import '../home/date_formatter.dart';
+import '../image_view/image_view_page.dart';
 
 class TaskViewPage extends ConsumerStatefulWidget {
   const TaskViewPage({Key? key, required this.taskId}) : super(key: key);
@@ -110,6 +112,11 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
                 }
               }
 
+              onTapImage(int index) async {
+                final url = await ref.watch(storageUrlProvider(images[index]).future);
+                context.pushNamed(ImageViewPage.name, queryParameters: {ImageViewPage.urlParam: url});
+              }
+
               return CustomScrollView(
                 slivers: [
                   SliverAppBar.large(
@@ -140,16 +147,38 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
                       ],
                     ),
                   ),
-                  SliverGrid.count(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 2,
-                    crossAxisSpacing: 2,
-                    children: task.images
-                        .map((imagePath) => ref.watch(storageUrlProvider(imagePath)).when(
-                            data: (url) => Image.network(url),
-                            error: (err, stack) => Text(err.toString()),
-                            loading: () => const CircularProgressIndicator()))
-                        .toList(),
+                  const SliverToBoxAdapter(child: SizedBox(height: 16)),
+                  SliverPadding(
+                    padding: EdgeInsets.only(left: padding, right: padding),
+                    sliver: SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 120,
+                        child: ImageList(
+                            imageProviders: images
+                                .map((e) => NetworkImage(ref
+                                    .watch(storageUrlProvider(e))
+                                    .when(data: (url) => url, error: (err, stack) => "", loading: () => "")))
+                                .toList(),
+                            tags: images,
+                            onPressedAdd: () {},
+                            onPressedImage: onTapImage,
+                            canAdd: false),
+                      ),
+                    ),
+                    // sliver: SliverGrid.count(
+                    //   crossAxisCount: 2,
+                    //   mainAxisSpacing: 2,
+                    //   crossAxisSpacing: 2,
+                    //   children: task.images
+                    //       .map((imagePath) => ref.watch(storageUrlProvider(imagePath)).when(
+                    //           data: (url) => ClipRRect(
+                    //                 borderRadius: BorderRadius.circular(32),
+                    //                 child: Image.network(url, fit: BoxFit.cover),
+                    //               ),
+                    //           error: (err, stack) => Text(err.toString()),
+                    //           loading: () => const CircularProgressIndicator()))
+                    //       .toList(),
+                    // ),
                   ),
                   // SliverToBoxAdapter(
                   //   child: Row(

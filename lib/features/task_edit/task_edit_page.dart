@@ -8,12 +8,12 @@ import 'package:todo_app/components/date_pick_button.dart';
 import 'package:todo_app/features/home/date_formatter.dart';
 import 'package:todo_app/features/home/firestore_api.dart';
 import 'package:todo_app/theme/input_decorations.dart';
-import 'package:todo_app/util/callback.dart';
 
 import '../../api/auth_providers.dart';
+import '../../components/image_list.dart';
+import '../../util/input_decoration_ex.dart';
 import '../image_view/image_view_page.dart';
 import 'task_detail_row.dart';
-import '../../util/input_decoration_ex.dart';
 
 class TaskEditPage extends ConsumerStatefulWidget {
   const TaskEditPage({super.key});
@@ -53,18 +53,14 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
     }
 
     tapImage(int index) async {
-      context.pushNamed(ImageViewPage.name,
-          pathParameters: {ImageViewPage.pathParam: imageFiles[index].path});
+      context.pushNamed(ImageViewPage.name, queryParameters: {ImageViewPage.pathParam: imageFiles[index].path});
     }
 
     tapUntil() async {
       const beforeYear = 100;
       const maxYear = 100;
       final picked = await showDatePicker(
-          context: context,
-          initialDate: until,
-          firstDate: DateTime(until.year - beforeYear),
-          lastDate: DateTime(until.year + maxYear));
+          context: context, initialDate: until, firstDate: DateTime(until.year - beforeYear), lastDate: DateTime(until.year + maxYear));
 
       if (picked != null) {
         setState(() {
@@ -76,11 +72,8 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
     addTask() async {
       final user = await ref.watch(userProvider.future);
       if (user != null) {
-        await FirestoreAPI.instance.addTask(user,
-            title: title,
-            description: description,
-            until: until,
-            images: imageFiles.map((e) => File(e.path)).toList());
+        await FirestoreAPI.instance
+            .addTask(user, title: title, description: description, until: until, images: imageFiles.map((e) => File(e.path)).toList());
 
         if (mounted) {
           context.pop();
@@ -89,7 +82,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
     }
 
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("タスクを追加"),
       ),
@@ -112,9 +105,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
                 }
               },
             ),
-            TaskDetailRow(
-                icon: const Icon(Icons.access_time),
-                child: DatePickButton(onPressed: tapUntil, date: strUntil)),
+            TaskDetailRow(icon: const Icon(Icons.access_time), child: DatePickButton(onPressed: tapUntil, date: strUntil)),
             TaskDetailRow(
                 icon: const Icon(Icons.table_rows),
                 child: Expanded(
@@ -133,100 +124,22 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
                 : SizedBox(
                     height: 120,
                     child: ImageList(
-                        imageFiles: imageFiles,
+                        imageProviders: imageFiles.map((e) => FileImage(File(e.path))).toList(),
+                        tags: imageFiles.map((e) => e.path).toList(),
                         onPressedAdd: pickImage,
-                        onPressedImage: tapImage),
+                        onPressedImage: tapImage,
+                        canAdd: true),
                   ),
             const SizedBox(height: 10),
             Row(
-              mainAxisAlignment: isImagesEmpty
-                  ? MainAxisAlignment.spaceBetween
-                  : MainAxisAlignment.end,
+              mainAxisAlignment: isImagesEmpty ? MainAxisAlignment.spaceBetween : MainAxisAlignment.end,
               children: [
-                isImagesEmpty
-                    ? OutlinedButton(
-                        onPressed: pickImage, child: const Text("画像を追加"))
-                    : const SizedBox(),
+                isImagesEmpty ? OutlinedButton(onPressed: pickImage, child: const Text("画像を追加")) : const SizedBox(),
                 FilledButton(onPressed: addTask, child: const Text("追加")),
               ],
             )
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ImageList extends StatelessWidget {
-  const ImageList(
-      {super.key,
-      required this.imageFiles,
-      required this.onPressedAdd,
-      required this.onPressedImage});
-
-  final List<XFile> imageFiles;
-  final VoidCallback onPressedAdd;
-  final IndexCallback onPressedImage;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return ImageListItem(
-                onPressed: onPressedAdd,
-                child: Expanded(
-                  child: OutlinedButton(
-                    onPressed: onPressedAdd,
-                    style: OutlinedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12)))),
-                    child: const Icon(Icons.add),
-                  ),
-                ));
-          } else {
-            final i = index - 1;
-            final path = imageFiles[i].path;
-            return ImageListItem(
-                onPressed: () => onPressedImage(i),
-                child: Hero(
-                    tag: path,
-                    child: Container(
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                alignment: FractionalOffset.topCenter,
-                                image: FileImage(File(path)))))));
-          }
-        },
-        separatorBuilder: (context, index) => const SizedBox(width: 10),
-        itemCount: imageFiles.length + 1);
-  }
-}
-
-class ImageListItem extends StatelessWidget {
-  const ImageListItem(
-      {super.key,
-      required this.child,
-      this.width,
-      this.height,
-      required this.onPressed});
-
-  final Widget child;
-  final double? width;
-  final double? height;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.all(Radius.circular(12)),
-      child: InkWell(
-        onTap: onPressed,
-        child:
-            SizedBox(width: width ?? 120, height: height ?? 120, child: child),
       ),
     );
   }
