@@ -17,13 +17,7 @@ import 'features/auth/auth_page.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
 
-  if (Firebase.apps.isEmpty) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  }
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -70,14 +64,6 @@ class RootPageState extends State<RootPage> {
   @override
   void initState() {
     super.initState();
-
-    _stream = FirebaseAuth.instance.userChanges().listen((user) {
-      if (user == null) {
-        context.go(AuthPage.name);
-      } else {
-        context.go(HomePage.name);
-      }
-    });
   }
 
   @override

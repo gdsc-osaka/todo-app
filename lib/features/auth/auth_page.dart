@@ -24,41 +24,7 @@ class AuthPage extends ConsumerWidget {
     final text = theme.textTheme;
 
     googleSignUp() async {
-      final messenger = ScaffoldMessenger.of(context);
-      context.loaderOverlay.show();
 
-      try {
-        final account = await GoogleSignIn(scopes: [
-          'email',
-          'https://www.googleapis.com/auth/contacts.readonly',
-        ]).signIn();
-
-        if (account == null) {
-          context.loaderOverlay.hide();
-          messenger.showSnackBar(const SnackBar(content: Text("認証に失敗しました")));
-          return;
-        }
-
-        final auth = await account.authentication;
-        final credential = GoogleAuthProvider.credential(idToken: auth.idToken, accessToken: auth.accessToken);
-
-        final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-        final user = userCredential.user;
-
-        if (user == null) {
-          context.loaderOverlay.hide();
-          messenger.showSnackBar(const SnackBar(content: Text("認証に失敗しました")));
-          return;
-        } else {
-          context.loaderOverlay.hide();
-          if (context.mounted) {
-            context.go(HomePage.name);
-          }
-          return;
-        }
-      } catch (e) {
-        context.loaderOverlay.hide();
-      }
     }
 
     final signUpButtons = [

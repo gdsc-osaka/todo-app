@@ -33,33 +33,9 @@ class EmailLoginPageState extends ConsumerState<EmailLoginPage> {
     final theme = Theme.of(context);
     final text = theme.textTheme;
 
-    logIn() async {
+    signIn() async {
       if (_formKey.currentState?.validate() ?? false) {
         // 入力データが正常な場合
-        context.loaderOverlay.show();
-        final messenger = ScaffoldMessenger.of(context);
-
-        try {
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: _email,
-            password: _password,
-          );
-
-          if (mounted) {
-            context.loaderOverlay.hide();
-            context.go(HomePage.name);
-          }
-        } on FirebaseAuthException catch (e) {
-          context.loaderOverlay.hide();
-
-          if (e.code == 'user-not-found' || e.code == 'wrong-password') {
-            messenger.showSnackBar(const SnackBar(content: Text('ユーザー名またはパスワードが不明です')));
-          }
-        } catch (e) {
-          if (kDebugMode) {
-            print(e);
-          }
-        }
       }
     }
 
@@ -86,7 +62,7 @@ class EmailLoginPageState extends ConsumerState<EmailLoginPage> {
                         })),
               ),
               const SizedBox(height: 28),
-              FilledButton(onPressed: logIn, child: const Text("ログイン"))
+              FilledButton(onPressed: signIn, child: const Text("ログイン"))
             ],
           ),
         ),

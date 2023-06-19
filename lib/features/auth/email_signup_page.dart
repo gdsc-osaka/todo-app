@@ -32,38 +32,6 @@ class _EmailSignUpPageState extends ConsumerState<EmailSignUpPage> {
     signUp() async {
       if (_formKey.currentState?.validate() ?? false) {
         // 入力データが正常な場合
-        context.loaderOverlay.show();
-        final messenger = ScaffoldMessenger.of(context);
-
-        try {
-          final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: _email,
-            password: _password,
-          );
-
-          final user = credential.user;
-
-          if (user != null) {
-            FirestoreAPI.instance.addUser(user);
-          }
-
-          if (mounted) {
-            context.loaderOverlay.hide();
-            context.go(HomePage.name);
-          }
-        } on FirebaseAuthException catch (e) {
-          context.loaderOverlay.hide();
-
-          if (e.code == 'weak-password') {
-            messenger.showSnackBar(const SnackBar(content: Text('より複雑なパスワードを使用してください')));
-          } else if (e.code == 'email-already-in-use') {
-            messenger.showSnackBar(const SnackBar(content: Text('メールアドレスが既に使用されています')));
-          }
-        } catch (e) {
-          if (kDebugMode) {
-            print(e);
-          }
-        }
       }
     }
 
