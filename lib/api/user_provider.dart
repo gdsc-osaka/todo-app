@@ -8,15 +8,5 @@ import 'auth_providers.dart';
 final _db = FirebaseFirestore.instance;
 
 final dbUserProvider = FutureProvider<DBUser?>((ref) async {
-  final user = await ref.watch(userProvider.future);
 
-  if (user == null) {
-    return Future.error('User not found.');
-  } else {
-    final uid = user.uid;
-    final snapshot = await _db.collection('users').doc(uid).withUserConverter().get();
-    final dbUser = snapshot.data();
-
-    return dbUser;
-  }
 });
