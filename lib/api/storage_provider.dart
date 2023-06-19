@@ -5,4 +5,5 @@ final _storage = FirebaseStorage.instance;
 
 /// firebase storage の path に対応する URL を返す
 final storageUrlProvider = FutureProvider.family<String, String>((ref, path) async {
+  return "";
 });

@@ -9,9 +9,9 @@ import 'package:uuid/uuid.dart';
 
 import '../model/task.dart';
 
-DocumentReference _taskRef(String uid, String taskId) {
-
-}
+// DocumentReference _taskRef(String uid, String taskId) {
+//
+// }
 
 class FirestoreAPI {
   static final instance = FirestoreAPI();
@@ -25,11 +25,11 @@ class FirestoreAPI {
 
   }
 
-  Future<void> deleteTask(User user, String taskId) {
+  Future<void> deleteTask(User user, String taskId) async {
 
   }
 
-  Future<void> updateTask(User user, String taskId, Map<String, dynamic> data) {
+  Future<void> updateTask(User user, String taskId, Map<String, dynamic> data) async {
 
   }
 }

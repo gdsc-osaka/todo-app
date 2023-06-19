@@ -11,10 +11,10 @@ final _db = FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
 
 final allTaskProvider = StreamProvider.autoDispose<List<Task>>((ref) {
-
+  return Stream.empty();
 });
 
 /// 特定のタスクのStreamを渡す
 final taskProvider = StreamProvider.autoDispose.family<Task, String>((ref, taskId) {
-
+  return Stream.empty();
 });
