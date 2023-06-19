@@ -7,7 +7,7 @@ import 'package:todo_app/model/user.dart';
 import 'package:todo_app/model/with_converter_ex.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../model/task.dart';
+import '../model/task.dart';
 
 const _uuid = Uuid();
 final _db = FirebaseFirestore.instance;
