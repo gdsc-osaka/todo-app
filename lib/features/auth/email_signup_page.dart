@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:todo_app/features/auth/email_form.dart';
-import 'package:todo_app/features/home/firestore_api.dart';
+import 'package:todo_app/api/firestore_api.dart';
 
 import '../home/home_page.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/components/date_pick_button.dart';
-import 'package:todo_app/features/home/firestore_api.dart';
+import 'package:todo_app/api/firestore_api.dart';
 import 'package:todo_app/features/task_edit/task_detail_row.dart';
 import 'package:todo_app/theme/input_decorations.dart';
 
