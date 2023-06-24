@@ -12,6 +12,7 @@ import 'package:todo_app/features/home/home_page.dart';
 import 'package:todo_app/features/image_view/image_view_page.dart';
 import 'package:todo_app/features/task_edit/task_edit_page.dart';
 import 'package:todo_app/features/task_view/task_view_page.dart';
+import 'package:todo_app/theme/theme.dart';
 
 import 'features/auth/auth_page.dart';
 import 'firebase_options.dart';
@@ -35,8 +36,17 @@ final _router = GoRouter(routes: [
   GoRoute(path: EmailLoginPage.name, builder: (context, state) => const EmailLoginPage()),
   GoRoute(path: HomePage.name, builder: (context, state) => const HomePage()),
   GoRoute(path: TaskEditPage.name, builder: (context, state) => const TaskEditPage()),
-  GoRoute(name: ImageViewPage.name, path: ImageViewPage.path, builder: (context, state) => ImageViewPage(imagePath: state.pathParameters[ImageViewPage.pathParam]!)),
-  GoRoute(name: TaskViewPage.name, path: TaskViewPage.path, builder: (context, state) => TaskViewPage(taskId: state.pathParameters[TaskViewPage.idParam]!))
+  GoRoute(
+      name: ImageViewPage.name,
+      path: ImageViewPage.path,
+      builder: (context, state) => ImageViewPage(
+            imagePath: state.queryParameters[ImageViewPage.pathParam],
+            imageUrl: state.queryParameters[ImageViewPage.urlParam],
+          )),
+  GoRoute(
+      name: TaskViewPage.name,
+      path: TaskViewPage.path,
+      builder: (context, state) => TaskViewPage(taskId: state.pathParameters[TaskViewPage.idParam]!))
 ]);
 
 class MyApp extends StatelessWidget {
@@ -49,9 +59,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         routerConfig: _router,
         title: 'To-Do',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        theme: theme,
       ),
     );
   }

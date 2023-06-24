@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:todo_app/api/storage_provider.dart';
 import 'package:todo_app/components/date_pick_button.dart';
 import 'package:todo_app/api/firestore_api.dart';
 import 'package:todo_app/features/task_edit/task_detail_row.dart';
 import 'package:todo_app/theme/input_decorations.dart';
 
 import '../../api/auth_providers.dart';
-import '../../api/storage_provider.dart';
-import '../../model/task.dart';
 import '../../api/tasks_provider.dart';
+import '../../components/image_list.dart';
+import '../../model/task.dart';
 import '../home/date_formatter.dart';
+import '../image_view/image_view_page.dart';
 
 class TaskViewPage extends ConsumerStatefulWidget {
   const TaskViewPage({Key? key, required this.taskId}) : super(key: key);
@@ -107,6 +109,17 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
               onTapComplete() {
                 if (user != null) {
                   _db.updateTask(user, taskId, Task.map(update: true, status: TaskStatus.completed));
+
+                  if (mounted) {
+                    context.pop();
+                  }
+                }
+              }
+
+              onTapImage(int index) async {
+                final url = await ref.watch(storageUrlProvider(images[index]).future);
+                if (mounted) {
+                  context.pushNamed(ImageViewPage.name, queryParameters: {ImageViewPage.urlParam: url});
                 }
               }
 
@@ -116,7 +129,11 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
                     floating: true,
                     pinned: true,
                     shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    title: TextFormField(controller: titleEditingController, onFieldSubmitted: onChangeTitle, decoration: simpleInputDecoration),
+                    title: TextFormField(
+                        controller: titleEditingController,
+                        onFieldSubmitted: onChangeTitle,
+                        decoration: simpleInputDecoration,
+                        style: text.headlineSmall),
                   ),
                   SliverPadding(
                     padding: EdgeInsets.only(left: padding, right: padding),
@@ -136,27 +153,45 @@ class TaskViewPageState extends ConsumerState<TaskViewPage> {
                       ],
                     ),
                   ),
-                  SliverGrid.count(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 2,
-                    crossAxisSpacing: 2,
-                    children: task.images
-                        .map((imagePath) => ref.watch(storageUrlProvider(imagePath)).when(
-                            data: (url) => Image.network(url),
-                            error: (err, stack) => Text(err.toString()),
-                            loading: () => const CircularProgressIndicator()))
-                        .toList(),
+                  const SliverToBoxAdapter(child: SizedBox(height: 16)),
+                  SliverPadding(
+                    padding: EdgeInsets.only(left: padding, right: padding),
+                    sliver: SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: images.isNotEmpty
+                            ? SizedBox(
+                                height: 120,
+                                child: ImageList(
+                                    imageProviders: images
+                                        .map((e) => NetworkImage(ref
+                                            .watch(storageUrlProvider(e))
+                                            .when(data: (url) => url, error: (err, stack) => "", loading: () => "")))
+                                        .toList(),
+                                    tags: images,
+                                    onPressedAdd: () {},
+                                    onPressedImage: onTapImage,
+                                    canAdd: false),
+                              )
+                            : const SizedBox(),
+                      ),
+                    ),
                   ),
-                  // SliverToBoxAdapter(
-                  //   child: Row(
-                  //     crossAxisAlignment: CrossAxisAlignment.center,
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       OutlinedButton(onPressed: onTapDelete, child: const Text('タスクを削除')),
-                  //       FilledButton(onPressed: onTapComplete, child: const Text('完了とする')),
-                  //     ],
-                  //   ),
-                  // )
+                  SliverPadding(
+                    padding: EdgeInsets.only(left: padding, right: padding),
+                    sliver: SliverToBoxAdapter(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          OutlinedButton(onPressed: onTapDelete, child: const Text('タスクを削除')),
+                          task.status != TaskStatus.completed
+                              ? FilledButton(onPressed: onTapComplete, child: const Text('完了とする'))
+                              : const SizedBox(),
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               );
             }
